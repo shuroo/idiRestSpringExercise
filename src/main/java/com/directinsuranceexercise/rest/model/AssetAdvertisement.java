@@ -1,11 +1,24 @@
 package com.directinsuranceexercise.rest.model;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 
 public class AssetAdvertisement extends GenericAdvertisement{
 
     protected Integer assetSize;
     protected Integer numberOfRooms ;
+
+    @NotEmpty
+    @Pattern(regexp = "^(sell|rent)$", message = "Asset ad-type must be either 'Sell' or 'Rent'")
+    protected String assetAdType;
+
+    public String getAssetAdType() {
+        return assetAdType;
+    }
+
+    public void setAssetAdType(String assetAdType) {
+        this.assetAdType = assetAdType;
+    }
 
     public Integer getAssetSize() {
         return assetSize;
