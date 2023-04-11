@@ -7,14 +7,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("advertisementsView")
+@Route("/advertisementsView")
 public class AdvertisementView extends VerticalLayout {
     @Autowired
     AdvertisementController advertisementController;
 
     public AdvertisementView() {
         Grid<GenericAdvertisement> grid = new Grid<>();
-        grid.setItems(advertisementController.getAllAdvertisements());
+        grid.setItems(advertisementController.getAll().getBody());
         //advertisementController
         grid.addColumn(GenericAdvertisement::getId).setHeader("ID");
         grid.addColumn(GenericAdvertisement::getCategory).setHeader("Category");

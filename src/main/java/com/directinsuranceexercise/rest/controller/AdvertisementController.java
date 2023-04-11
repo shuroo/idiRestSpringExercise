@@ -1,10 +1,13 @@
 package com.directinsuranceexercise.rest.controller;
 
+import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
+import com.directinsuranceexercise.rest.utilities.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,12 +16,15 @@ import java.util.Set;
 @RequestMapping(value = "/advertisements", produces = "application/json")
 public class AdvertisementController {
 
-    public Set<GenericAdvertisement> getAllAdvertisements() {
+    // Create an in-memory list to store the User objects
+    private AdManager advertisementManager = AdManager.getInstance();
+
+    protected List<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisementsList();
+
+    public List<GenericAdvertisement> getAdvertisementsList() {
         return allAdvertisements;
     }
 
-    // Create an in-memory list to store the User objects
-    protected Set<GenericAdvertisement> allAdvertisements = new HashSet<>();
 
     protected GenericAdvertisement findById(Long requestedId) {
         if (requestedId != null) {
@@ -34,7 +40,9 @@ public class AdvertisementController {
     @GetMapping("/all")
     public ResponseEntity<List<GenericAdvertisement>> getAll() {
 
-        return ResponseEntity.ok(allAdvertisements.stream().toList());
+        System.out.println(allAdvertisements.size());
+
+        return ResponseEntity.ok(allAdvertisements);
     }
 
     @GetMapping("/filterCategory/{category}")
@@ -85,6 +93,20 @@ public class AdvertisementController {
         assetAdvertisement.setId(id);
     }
 
+    /**
+     * Method for before creation of a new Advertisement: make sure the id does not already exists in the system,
+     * generate a new id
+     * @param ad
+     * @return
+     */
+    protected synchronized GenericAdvertisement preCreateAd(GenericAdvertisement ad) throws Exception {
+        generateAndSetId(ad);
+        if (findById(ad.getId()) != null) {
+                throw new Exception("The following ID already exists in the system. method is aborting.");
+            }
+        return ad;
+    }
+
     // todo: inherit and split the updates.
 
     /**
@@ -100,7 +122,7 @@ public class AdvertisementController {
 
         GenericAdvertisement existingAssetAdvertisement = findById(id);
         if (existingAssetAdvertisement == null) {
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST); // Such ID does not exists
         }
         existingAssetAdvertisement.setCategory(assetAdvertisement.getCategory());
         existingAssetAdvertisement.setContactName(assetAdvertisement.getContactName());
