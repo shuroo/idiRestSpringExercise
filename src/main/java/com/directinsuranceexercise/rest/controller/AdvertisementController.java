@@ -7,24 +7,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @RestController
 @RequestMapping(value = "/advertisements", produces = "application/json")
-public class AdvertisementController {
+public class AdvertisementController<T extends GenericAdvertisement> {
 
     protected AdManager advertisementManager = AdManager.getInstance();
-    protected List<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisementsList();
+    protected ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisementsList();
 
-    public List<GenericAdvertisement> getAdvertisementsList() {
+    public ConcurrentLinkedQueue<GenericAdvertisement> getAdvertisementsList() {
+
         return allAdvertisements;
     }
 
 
-    protected GenericAdvertisement findById(Long requestedId) {
+    protected GenericAdvertisement findById(String requestedId) {
         if (requestedId != null) {
 
             return allAdvertisements.stream()
-                    .filter(ad -> ad.getId() == requestedId)
+                    .filter(ad -> ad.getId().equals(requestedId))
                     .findFirst()
                     .orElse(null);
         }
@@ -36,7 +39,7 @@ public class AdvertisementController {
 
         System.out.println(allAdvertisements.size());
 
-        return ResponseEntity.ok(allAdvertisements);
+        return ResponseEntity.ok(allAdvertisements.stream().toList());
     }
 
     @GetMapping("/filterCategory/{category}")
@@ -54,10 +57,10 @@ public class AdvertisementController {
 
     // todo: need to test this. should we use a set or a list?
     @GetMapping("/jump/{id}")
-    public ResponseEntity<List<GenericAdvertisement>> jumpAssetAdvertisement(@PathVariable("id") Long id) {
+    public ResponseEntity<List<GenericAdvertisement>> jumpAssetAdvertisement(@PathVariable("id") String id) {
 
         for (GenericAdvertisement ad : allAdvertisements) {
-            if (ad.getId() == id) {
+            if (ad.getId().equals(id)) {
                 allAdvertisements.remove(ad);
                 allAdvertisements.add(ad);
                 break;
@@ -67,10 +70,10 @@ public class AdvertisementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GenericAdvertisement> getAssetAdvertisement(@PathVariable("id") Long id) {
+    public ResponseEntity<GenericAdvertisement> getAdvertisement(@PathVariable("id") String id) {
 
         GenericAdvertisement ad = allAdvertisements.stream()
-                .filter(user -> user.getId() == id)
+                .filter(user -> user.getId().equals(id))
                 .findFirst()
                 .orElse(null);
         return ResponseEntity.ok().body(ad);
@@ -82,9 +85,10 @@ public class AdvertisementController {
      *
      * @param - the entity to set id in.
      */
-    protected void generateAndSetId(GenericAdvertisement assetAdvertisement) {
-        Long id = (long) (allAdvertisements.size() + 1);
-        assetAdvertisement.setId(id);
+    protected void generateAndSetId(GenericAdvertisement advertisement) {
+        // Generate a new ID for the advertisement
+        String id = UUID.randomUUID().toString();
+        advertisement.setId(id);
     }
 
     /**
@@ -101,6 +105,19 @@ public class AdvertisementController {
         return ad;
     }
 
+
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseEntity<T> createAdvertisement(@RequestBody T advertisement) throws Exception {
+        // Generate a new ID for the advertisement and add it to the list
+        preCreateAd(advertisement);
+        advertisement.setCategory(advertisement.getCategory());
+        allAdvertisements.add(advertisement);
+        return ResponseEntity.ok().body(advertisement);
+    }
+
+
+
     // todo: inherit and split the updates.
 
     /**
@@ -112,13 +129,12 @@ public class AdvertisementController {
      * @throws Exception
      */
     protected ResponseEntity<GenericAdvertisement> updateAdvertisement(
-            Long id, GenericAdvertisement assetAdvertisement) throws Exception {
+            String id, GenericAdvertisement assetAdvertisement) throws Exception {
 
         GenericAdvertisement existingAssetAdvertisement = findById(id);
         if (existingAssetAdvertisement == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST); // Such ID does not exists
         }
-        existingAssetAdvertisement.setCategory(assetAdvertisement.getCategory());
         existingAssetAdvertisement.setContactName(assetAdvertisement.getContactName());
         existingAssetAdvertisement.setContactPhoneNumber(assetAdvertisement.getContactPhoneNumber());
         existingAssetAdvertisement.setPrice(assetAdvertisement.getPrice());
@@ -128,8 +144,8 @@ public class AdvertisementController {
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteAdvertisement(@PathVariable("id") Long id) {
-        return allAdvertisements.removeIf(user -> user.getId() == id);
+    public boolean deleteAdvertisement(@PathVariable("id") String id) {
+        return allAdvertisements.removeIf(user -> user.getId().equals(id));
     }
 
     // Asset instance from config file to create upon startup

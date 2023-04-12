@@ -3,6 +3,7 @@ package com.directinsuranceexercise.rest.controller;
 import com.directinsuranceexercise.rest.config.AdvertisementConfig;
 import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.AssetAdvertisement;
+import com.directinsuranceexercise.rest.model.CarAdvertisement;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.Constants;
 import jakarta.annotation.PostConstruct;
@@ -13,27 +14,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @RestController
 @RequestMapping(value = "/assetAdvertisements", produces = "application/json")
-public class AssetAdvertisementController extends AdvertisementController {
+public class AssetAdvertisementController extends AdvertisementController<AssetAdvertisement> {
 
     @Autowired
     AdvertisementConfig config;
-    @RequestMapping(value = "/create",
-            method = RequestMethod.POST)
-    public ResponseEntity<AssetAdvertisement> createAssetAdvertisement(@RequestBody AssetAdvertisement assetAdvertisement) throws Exception {
-        // Generate a new ID for the user and add it to the list
-        super.preCreateAd((GenericAdvertisement) assetAdvertisement);
-        assetAdvertisement.setCategory(Constants.assetCategory);
-        getAdvertisementsList().add(assetAdvertisement);
-        return ResponseEntity.ok().body(assetAdvertisement);
-    }
-
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<GenericAdvertisement> updateAdvertisement(@PathVariable("id") Long id,
+    public ResponseEntity<AssetAdvertisement> updateAdvertisement(@PathVariable("id") String id,
                                                                     @RequestBody AssetAdvertisement assetAdvertisement)
             throws Exception {
 
@@ -66,11 +57,12 @@ public class AssetAdvertisementController extends AdvertisementController {
 
     // Asset instance from config file to create upon startup
 
+    //todo: remove remove remove!!!
     @PostConstruct
     @Bean(initMethod = "init")
     public void init() {
         AdManager adManager = AdManager.getInstance();
-        List allAdvertisements = adManager.getAdvertisementsList();
+        ConcurrentLinkedQueue allAdvertisements = adManager.getAdvertisementsList();
         allAdvertisements.add(config.getSampleAssetAdvertisement());
         allAdvertisements.add(config.getSampleCarAdvertisement());
         allAdvertisements.add(config.getSampleElectronicsAdvertisement());

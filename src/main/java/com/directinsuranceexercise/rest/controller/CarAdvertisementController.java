@@ -1,8 +1,6 @@
 package com.directinsuranceexercise.rest.controller;
 
 import com.directinsuranceexercise.rest.model.CarAdvertisement;
-import com.directinsuranceexercise.rest.model.GenericAdvertisement;
-import com.directinsuranceexercise.rest.utilities.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,23 +8,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/carAdvertisements", produces = "application/json")
-public class CarAdvertisementController  extends AdvertisementController {
+public class CarAdvertisementController extends AdvertisementController<CarAdvertisement> {
 
-    // Car instance from config file to create upon startup
+    // todo: test carAdvertisements/create
 
-    @RequestMapping(value = "/create",
-            method = RequestMethod.POST)
-    public ResponseEntity<CarAdvertisement> createCarAdvertisement(@RequestBody CarAdvertisement CarAdvertisement) throws Exception {
-        // Generate a new ID for the user and add it to the list
-        super.preCreateAd((GenericAdvertisement) CarAdvertisement);
-        CarAdvertisement.setCategory(Constants.carCategory);
-        getAdvertisementsList().add(CarAdvertisement);
-        return ResponseEntity.ok().body(CarAdvertisement);
-    }
-
-
+    // todo: change this to use generics.
     @PutMapping("/update/{id}")
-    public ResponseEntity<GenericAdvertisement> updateAdvertisement(@PathVariable("id") Long id,
+    public ResponseEntity<CarAdvertisement> updateAdvertisement(@PathVariable("id") String id,
                                                                     @RequestBody CarAdvertisement carAdvertisement)
             throws Exception {
 
