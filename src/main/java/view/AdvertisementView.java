@@ -15,7 +15,6 @@ public class AdvertisementView extends VerticalLayout {
     public AdvertisementView() {
         Grid<GenericAdvertisement> grid = new Grid<>();
         grid.setItems(advertisementController.getAll().getBody());
-        //advertisementController
         grid.addColumn(GenericAdvertisement::getId).setHeader("ID");
         grid.addColumn(GenericAdvertisement::getCategory).setHeader("Category");
         grid.addColumn(GenericAdvertisement::getPrice).setHeader("Price");

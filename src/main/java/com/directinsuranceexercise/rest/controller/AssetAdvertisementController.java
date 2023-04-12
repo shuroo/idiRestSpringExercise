@@ -1,6 +1,7 @@
 package com.directinsuranceexercise.rest.controller;
 
 import com.directinsuranceexercise.rest.config.AdvertisementConfig;
+import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.AssetAdvertisement;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.Constants;
@@ -12,14 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/assetAdvertisements", produces = "application/json")
 public class AssetAdvertisementController extends AdvertisementController {
 
-    // Asset instance from config file to create upon startup
     @Autowired
-    private AdvertisementConfig config;
-
+    AdvertisementConfig config;
     @RequestMapping(value = "/create",
             method = RequestMethod.POST)
     public ResponseEntity<AssetAdvertisement> createAssetAdvertisement(@RequestBody AssetAdvertisement assetAdvertisement) throws Exception {
@@ -54,13 +55,25 @@ public class AssetAdvertisementController extends AdvertisementController {
         return ResponseEntity.ok(existingAssetAdvertisement);
     }
 
-    @Bean
-    public static CommonAnnotationBeanPostProcessor commonAnnotationBeanPostProcessor() {
+    // todo: move from here!!!
+
+        @Bean
+    public static CommonAnnotationBeanPostProcessor commonAnnotationBeanPostProcessorAsset() {
+
+        // singleton pattern:
         return new CommonAnnotationBeanPostProcessor();
     }
+
+    // Asset instance from config file to create upon startup
+
     @PostConstruct
     @Bean(initMethod = "init")
     public void init() {
+        AdManager adManager = AdManager.getInstance();
+        List allAdvertisements = adManager.getAdvertisementsList();
         allAdvertisements.add(config.getSampleAssetAdvertisement());
+        allAdvertisements.add(config.getSampleCarAdvertisement());
+        allAdvertisements.add(config.getSampleElectronicsAdvertisement());
     }
+
 }

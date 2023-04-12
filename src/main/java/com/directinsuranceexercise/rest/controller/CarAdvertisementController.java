@@ -1,13 +1,8 @@
 package com.directinsuranceexercise.rest.controller;
 
-import com.directinsuranceexercise.rest.config.AdvertisementConfig;
 import com.directinsuranceexercise.rest.model.CarAdvertisement;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.Constants;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class CarAdvertisementController  extends AdvertisementController {
 
     // Car instance from config file to create upon startup
-    @Autowired
-    private AdvertisementConfig config;
 
     @RequestMapping(value = "/create",
             method = RequestMethod.POST)
@@ -58,13 +51,4 @@ public class CarAdvertisementController  extends AdvertisementController {
         return ResponseEntity.ok(existingCarAdvertisement);
     }
 
-    @Bean
-    public static CommonAnnotationBeanPostProcessor commonAnnotationBeanPostProcessor() {
-        return new CommonAnnotationBeanPostProcessor();
-    }
-    @PostConstruct
-    @Bean(initMethod = "init")
-    public void init() {
-        allAdvertisements.add(config.getSampleCarAdvertisement());
-    }
 }

@@ -1,5 +1,10 @@
 package com.directinsuranceexercise.rest.model;
-import com.directinsuranceexercise.rest.model.GenericAdvertisement;
+
+import com.directinsuranceexercise.rest.config.AdvertisementConfig;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +13,8 @@ import java.util.List;
  * Class to manage the Ads data structure (List) as a singleton
  */
 public class AdManager {
+    @Autowired
+    protected AdvertisementConfig config;
     private static AdManager instance = null;
 
     // Create an in-memory list to store the GenericAdvertisement objects
@@ -43,5 +50,24 @@ public class AdManager {
         assetAdvertisement.setId(id);
     }
 
-    // Other methods for manipulating the allAdvertisements list...
+
+    @Bean
+    public static CommonAnnotationBeanPostProcessor commonAnnotationBeanPostProcessorAsset() {
+
+        // singleton pattern:
+        return new CommonAnnotationBeanPostProcessor();
+    }
+    Integer counter = 0;
+    @PostConstruct
+    @Bean(initMethod = "init")
+    public void init() {
+
+        if(counter == 0) {
+            System.out.println("=====1====");
+            allAdvertisements.add(config.getSampleAssetAdvertisement());
+            allAdvertisements.add(config.getSampleCarAdvertisement());
+            allAdvertisements.add(config.getSampleElectronicsAdvertisement());
+            counter++;
+        }
+    }
 }

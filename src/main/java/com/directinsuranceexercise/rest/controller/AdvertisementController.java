@@ -2,23 +2,17 @@ package com.directinsuranceexercise.rest.controller;
 
 import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
-import com.directinsuranceexercise.rest.utilities.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/advertisements", produces = "application/json")
 public class AdvertisementController {
 
-    // Create an in-memory list to store the User objects
-    private AdManager advertisementManager = AdManager.getInstance();
-
+    protected AdManager advertisementManager = AdManager.getInstance();
     protected List<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisementsList();
 
     public List<GenericAdvertisement> getAdvertisementsList() {
@@ -137,5 +131,10 @@ public class AdvertisementController {
     public boolean deleteAdvertisement(@PathVariable("id") Long id) {
         return allAdvertisements.removeIf(user -> user.getId() == id);
     }
+
+    // Asset instance from config file to create upon startup
+
+
+
 }
 
