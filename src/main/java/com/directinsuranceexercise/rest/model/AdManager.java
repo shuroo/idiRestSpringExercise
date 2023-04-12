@@ -35,20 +35,5 @@ public class AdManager {
 
         return allAdvertisements;
     }
-
-    @Bean
-    public static CommonAnnotationBeanPostProcessor commonAnnotationBeanPostProcessorAsset() {
-
-        // singleton pattern:
-        return new CommonAnnotationBeanPostProcessor();
-    }
-
-    @PostConstruct
-    @Bean(initMethod = "init")
-    public void init() {
-        allAdvertisements.add(config.getSampleAssetAdvertisement());
-        allAdvertisements.add(config.getSampleCarAdvertisement());
-        allAdvertisements.add(config.getSampleElectronicsAdvertisement());
-    }
 }
 

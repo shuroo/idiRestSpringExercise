@@ -1,7 +1,12 @@
 package com.directinsuranceexercise.rest.controller;
 
+import com.directinsuranceexercise.rest.config.AdvertisementConfig;
 import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +19,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @RequestMapping(value = "/advertisements", produces = "application/json")
 public class AdvertisementController<T extends GenericAdvertisement> {
 
+    @Autowired
+    AdvertisementConfig config;
     protected AdManager advertisementManager = AdManager.getInstance();
     protected ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisementsList();
 
@@ -150,6 +157,8 @@ public class AdvertisementController<T extends GenericAdvertisement> {
 
     // Asset instance from config file to create upon startup
 
+
+    // todo: move from here!!!
 
 
 }

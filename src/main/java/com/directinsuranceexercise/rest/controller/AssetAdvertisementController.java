@@ -1,27 +1,15 @@
 package com.directinsuranceexercise.rest.controller;
 
 import com.directinsuranceexercise.rest.config.AdvertisementConfig;
-import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.AssetAdvertisement;
-import com.directinsuranceexercise.rest.model.CarAdvertisement;
-import com.directinsuranceexercise.rest.model.GenericAdvertisement;
-import com.directinsuranceexercise.rest.utilities.Constants;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 @RestController
 @RequestMapping(value = "/assetAdvertisements", produces = "application/json")
 public class AssetAdvertisementController extends AdvertisementController<AssetAdvertisement> {
-
-    @Autowired
-    AdvertisementConfig config;
 
     @PutMapping("/update/{id}")
     public ResponseEntity<AssetAdvertisement> updateAdvertisement(@PathVariable("id") String id,
@@ -45,27 +33,4 @@ public class AssetAdvertisementController extends AdvertisementController<AssetA
         allAdvertisements.add(existingAssetAdvertisement);
         return ResponseEntity.ok(existingAssetAdvertisement);
     }
-
-    // todo: move from here!!!
-
-        @Bean
-    public static CommonAnnotationBeanPostProcessor commonAnnotationBeanPostProcessorAsset() {
-
-        // singleton pattern:
-        return new CommonAnnotationBeanPostProcessor();
-    }
-
-    // Asset instance from config file to create upon startup
-
-    //todo: remove remove remove!!!
-    @PostConstruct
-    @Bean(initMethod = "init")
-    public void init() {
-        AdManager adManager = AdManager.getInstance();
-        ConcurrentLinkedQueue allAdvertisements = adManager.getAdvertisementsList();
-        allAdvertisements.add(config.getSampleAssetAdvertisement());
-        allAdvertisements.add(config.getSampleCarAdvertisement());
-        allAdvertisements.add(config.getSampleElectronicsAdvertisement());
-    }
-
 }
