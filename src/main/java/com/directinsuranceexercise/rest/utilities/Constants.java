@@ -7,5 +7,7 @@ public class Constants {
     public static final String carCategory = "car";
 
     public static final String electricityCategory = "electricity";
+
+    public static final String genericCategory = "generic";
 }
 

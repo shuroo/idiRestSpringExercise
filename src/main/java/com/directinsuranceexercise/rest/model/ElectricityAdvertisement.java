@@ -1,18 +1,20 @@
 package com.directinsuranceexercise.rest.model;
 
+import com.directinsuranceexercise.rest.utilities.Constants;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public class ElectricityAdvertisement extends GenericAdvertisement {
 
+    // todo: will it work? test the categories!
+    protected String category = Constants.electricityCategory;
     @NotEmpty
     @Pattern(regexp = "^(new|used)$", message = "condition must be 'new' or 'used'")
-    private String condition;
+    protected String condition;
 
     @NotEmpty
     @Pattern(regexp = "^(frigider|computer|drone|amplifier|smartphone)$", message = "electricityType must be of a known type, please try again")
-    private String electricityType;
+    protected String electricityType;
 
     public String getCondition() {
         return condition;

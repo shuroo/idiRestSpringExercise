@@ -1,10 +1,12 @@
 package com.directinsuranceexercise.rest.model;
 
+import com.directinsuranceexercise.rest.utilities.Constants;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 
 public class AssetAdvertisement extends GenericAdvertisement{
 
+    protected String category = Constants.assetCategory;
     protected Integer assetSize;
     protected Integer numberOfRooms ;
 

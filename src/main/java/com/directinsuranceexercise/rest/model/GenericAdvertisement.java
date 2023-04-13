@@ -1,12 +1,16 @@
 package com.directinsuranceexercise.rest.model;
 
+import com.directinsuranceexercise.rest.utilities.Constants;
+
 import java.util.logging.Logger;
 
 public class GenericAdvertisement {
     private static final Logger logger = Logger.getLogger(GenericAdvertisement.class.getName());
 
     private String id;
-    private String category;
+
+    // a placeholder to be overriden by future categories
+    private String category = Constants.genericCategory;
     private String contactName;
     private String contactPhoneNumber;
     private Integer price;

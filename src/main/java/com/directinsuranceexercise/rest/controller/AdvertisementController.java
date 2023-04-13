@@ -3,18 +3,17 @@ package com.directinsuranceexercise.rest.controller;
 import com.directinsuranceexercise.rest.config.AdvertisementConfig;
 import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
-import jakarta.annotation.PostConstruct;
+import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@Component
 @RestController
 @RequestMapping(value = "/advertisements", produces = "application/json")
 public class AdvertisementController<T extends GenericAdvertisement> {
@@ -88,24 +87,13 @@ public class AdvertisementController<T extends GenericAdvertisement> {
 
 
     /**
-     * Method to auto generate and set id in the advertisement object.
-     *
-     * @param - the entity to set id in.
-     */
-    protected void generateAndSetId(GenericAdvertisement advertisement) {
-        // Generate a new ID for the advertisement
-        String id = UUID.randomUUID().toString();
-        advertisement.setId(id);
-    }
-
-    /**
      * Method for before creation of a new Advertisement: make sure the id does not already exists in the system,
      * generate a new id
      * @param ad
      * @return
      */
     protected synchronized GenericAdvertisement preCreateAd(GenericAdvertisement ad) throws Exception {
-        generateAndSetId(ad);
+        AdvertisementUtils.generateAndSetId(ad);
         if (findById(ad.getId()) != null) {
                 throw new Exception("The following ID already exists in the system. method is aborting.");
             }
@@ -118,9 +106,9 @@ public class AdvertisementController<T extends GenericAdvertisement> {
     public ResponseEntity<T> createAdvertisement(@RequestBody T advertisement) throws Exception {
         // Generate a new ID for the advertisement and add it to the list
         preCreateAd(advertisement);
-        advertisement.setCategory(advertisement.getCategory());
-        allAdvertisements.add(advertisement);
-        return ResponseEntity.ok().body(advertisement);
+        System.out.println("In create");
+        allAdvertisements.add((T)advertisement);
+        return ResponseEntity.ok().body((T)advertisement);
     }
 
 

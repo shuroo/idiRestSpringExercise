@@ -1,5 +1,7 @@
 package com.directinsuranceexercise.rest.model;
 
+import com.directinsuranceexercise.rest.utilities.Constants;
+
 public class CarAdvertisement extends GenericAdvertisement {
 
     protected String manufacturer;
@@ -8,6 +10,7 @@ public class CarAdvertisement extends GenericAdvertisement {
     protected int km;
     protected String color;
 
+    protected String category = Constants.carCategory;
     public String getManufacturer() {
         return manufacturer;
     }

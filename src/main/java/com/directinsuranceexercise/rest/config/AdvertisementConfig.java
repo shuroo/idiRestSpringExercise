@@ -4,6 +4,7 @@ import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.AssetAdvertisement;
 import com.directinsuranceexercise.rest.model.CarAdvertisement;
 import com.directinsuranceexercise.rest.model.ElectricityAdvertisement;
+import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.Constants;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +71,7 @@ public class AdvertisementConfig {
     // Create a sample asset ad, based on the configuration file definitions:
     public AssetAdvertisement getSampleAssetAdvertisement() {
         AssetAdvertisement ad = new AssetAdvertisement();
+        AdvertisementUtils.generateAndSetId(ad);
         ad.setCategory(Constants.assetCategory);
         ad.setPrice(assetPrice);
         ad.setContactName(contactName);
@@ -77,13 +79,14 @@ public class AdvertisementConfig {
         ad.setAssetSize(assetSize);
         ad.setAssetAdType(assetAdType);
         ad.setNumberOfRooms(numberOfRooms);
-        //todo: advance id, all are created with 0!!
+        AdvertisementUtils.generateAndSetId(ad);
         return ad;
     }
 
     // Create a sample car ad, based on the configuration file definitions:
     public CarAdvertisement getSampleCarAdvertisement() {
         CarAdvertisement ad = new CarAdvertisement();
+        AdvertisementUtils.generateAndSetId(ad);
         ad.setCategory(Constants.carCategory);
         ad.setPrice(carPrice);
         ad.setContactName(contactName);
@@ -97,6 +100,7 @@ public class AdvertisementConfig {
     // Create a sample electronics ad, based on the configuration file definitions:
     public ElectricityAdvertisement getSampleElectronicsAdvertisement() {
         ElectricityAdvertisement ad = new ElectricityAdvertisement();
+        AdvertisementUtils.generateAndSetId(ad);
         ad.setCategory(Constants.electricityCategory);
         ad.setPrice(electricityPrice);
         ad.setContactName(contactName);
