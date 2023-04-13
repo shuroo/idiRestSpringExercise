@@ -1,10 +1,8 @@
 package com.directinsuranceexercise.rest.controller;
 
-import com.directinsuranceexercise.rest.config.AdvertisementConfig;
 import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -18,70 +16,39 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @RequestMapping(value = "/advertisements", produces = "application/json")
 public class AdvertisementController<T extends GenericAdvertisement> {
 
-    @Autowired
-    AdvertisementConfig config;
     protected AdManager advertisementManager = AdManager.getInstance();
-    protected ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisementsList();
-
-    public ConcurrentLinkedQueue<GenericAdvertisement> getAdvertisementsList() {
-
-        return allAdvertisements;
-    }
-
-
-    protected GenericAdvertisement findById(String requestedId) {
-        if (requestedId != null) {
-
-            return allAdvertisements.stream()
-                    .filter(ad -> ad.getId().equals(requestedId))
-                    .findFirst()
-                    .orElse(null);
-        }
-        return null;
-    }
+    protected ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisements();
 
     @GetMapping("/all")
     public ResponseEntity<List<GenericAdvertisement>> getAll() {
-
-        System.out.println(allAdvertisements.size());
-
         return ResponseEntity.ok(allAdvertisements.stream().toList());
     }
 
     @GetMapping("/filterCategory/{category}")
     public ResponseEntity<List<GenericAdvertisement>> getByCategory(@PathVariable("category") String category) {
 
-        List<GenericAdvertisement> allByCategory = allAdvertisements.stream().filter(ad -> ad.getCategory().equals(category)).toList();
+        List<GenericAdvertisement> allByCategory = AdvertisementUtils.filterByCategory(category,allAdvertisements);
         return ResponseEntity.ok(allByCategory);
     }
 
     @GetMapping("/filterPrice/{price}")
     public ResponseEntity<List<GenericAdvertisement>> getByMaxPrice(@PathVariable("price") Integer maxPrice) {
-        List<GenericAdvertisement> listByMaxPrice = allAdvertisements.stream().filter(ad -> ad.getPrice() <= maxPrice).toList();
+        List<GenericAdvertisement> listByMaxPrice = AdvertisementUtils.filterByMaxPrice(maxPrice,allAdvertisements);
         return ResponseEntity.ok(listByMaxPrice);
     }
 
     // todo: need to test this. should we use a set or a list?
-    @GetMapping("/jump/{id}")
-    public ResponseEntity<List<GenericAdvertisement>> jumpAssetAdvertisement(@PathVariable("id") String id) {
+    @GetMapping("/bringToTop/{id}")
+    public ResponseEntity<List<GenericAdvertisement>> bringAdvertisementToTop(@PathVariable("id") String id) {
 
-        for (GenericAdvertisement ad : allAdvertisements) {
-            if (ad.getId().equals(id)) {
-                allAdvertisements.remove(ad);
-                allAdvertisements.add(ad);
-                break;
-            }
-        }
+        AdvertisementUtils.bringToTop(id,allAdvertisements);
         return ResponseEntity.ok(allAdvertisements.stream().toList());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<GenericAdvertisement> getAdvertisement(@PathVariable("id") String id) {
 
-        GenericAdvertisement ad = allAdvertisements.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        GenericAdvertisement ad = AdvertisementUtils.findById(id,allAdvertisements);
         return ResponseEntity.ok().body(ad);
     }
 
@@ -94,7 +61,7 @@ public class AdvertisementController<T extends GenericAdvertisement> {
      */
     protected synchronized GenericAdvertisement preCreateAd(GenericAdvertisement ad) throws Exception {
         AdvertisementUtils.generateAndSetId(ad);
-        if (findById(ad.getId()) != null) {
+        if (AdvertisementUtils.findById(ad.getId(),allAdvertisements) != null) {
                 throw new Exception("The following ID already exists in the system. method is aborting.");
             }
         return ad;
@@ -106,7 +73,6 @@ public class AdvertisementController<T extends GenericAdvertisement> {
     public ResponseEntity<T> createAdvertisement(@RequestBody T advertisement) throws Exception {
         // Generate a new ID for the advertisement and add it to the list
         preCreateAd(advertisement);
-        System.out.println("In create");
         allAdvertisements.add((T)advertisement);
         return ResponseEntity.ok().body((T)advertisement);
     }
@@ -126,7 +92,7 @@ public class AdvertisementController<T extends GenericAdvertisement> {
     protected ResponseEntity<GenericAdvertisement> updateAdvertisement(
             String id, GenericAdvertisement assetAdvertisement) throws Exception {
 
-        GenericAdvertisement existingAssetAdvertisement = findById(id);
+        GenericAdvertisement existingAssetAdvertisement = AdvertisementUtils.findById(id,allAdvertisements);
         if (existingAssetAdvertisement == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST); // Such ID does not exists
         }
@@ -140,13 +106,9 @@ public class AdvertisementController<T extends GenericAdvertisement> {
 
     @DeleteMapping("/{id}")
     public boolean deleteAdvertisement(@PathVariable("id") String id) {
+
         return allAdvertisements.removeIf(user -> user.getId().equals(id));
     }
-
-    // Asset instance from config file to create upon startup
-
-
-    // todo: move from here!!!
 
 
 }

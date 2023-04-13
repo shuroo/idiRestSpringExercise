@@ -1,12 +1,8 @@
 package com.directinsuranceexercise.rest.model;
 
 import com.directinsuranceexercise.rest.config.AdvertisementConfig;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -31,8 +27,7 @@ public class AdManager {
         return instance;
     }
 
-    public ConcurrentLinkedQueue<GenericAdvertisement> getAdvertisementsList() {
-
+    public ConcurrentLinkedQueue<GenericAdvertisement> getAdvertisements() {
         return allAdvertisements;
     }
 }
