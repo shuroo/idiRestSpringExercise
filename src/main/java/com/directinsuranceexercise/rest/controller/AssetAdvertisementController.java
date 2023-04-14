@@ -1,7 +1,6 @@
 package com.directinsuranceexercise.rest.controller;
 
 import com.directinsuranceexercise.rest.model.AssetAdvertisement;
-import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,18 +10,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/assetAdvertisements", produces = "application/json")
 public class AssetAdvertisementController extends AdvertisementController<AssetAdvertisement> {
 
-
-    //todo: add to other categories
     @RequestMapping(value = "/create",
             method = RequestMethod.POST)
     public ResponseEntity<AssetAdvertisement> createAssetAdvertisement(@RequestBody AssetAdvertisement assetAdvertisement) throws Exception {
-        super.createAdvertisement(assetAdvertisement);
-        return ResponseEntity.ok().body(assetAdvertisement);
-        //        // Generate a new ID for the user and add it to the list
-//        super.preCreateAd((GenericAdvertisement) assetAdvertisement);
-//        assetAdvertisement.setCategory(Constants.assetCategory);
-//        allAdvertisements.add(assetAdvertisement);
-//        return ResponseEntity.ok().body(assetAdvertisement);
+        return createAdvertisement(Constants.assetCategory, assetAdvertisement);
     }
     @PutMapping("/update/{id}")
     public ResponseEntity<AssetAdvertisement> updateAdvertisement(@PathVariable("id") String id,

@@ -1,6 +1,8 @@
 package com.directinsuranceexercise.rest.controller;
 
+import com.directinsuranceexercise.rest.model.AssetAdvertisement;
 import com.directinsuranceexercise.rest.model.CarAdvertisement;
+import com.directinsuranceexercise.rest.utilities.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +13,13 @@ import org.springframework.web.bind.annotation.*;
 public class CarAdvertisementController extends AdvertisementController<CarAdvertisement> {
 
     // todo: test carAdvertisements/create
+    @RequestMapping(value = "/create",
+            method = RequestMethod.POST)
+    public ResponseEntity<CarAdvertisement> createCarAdvertisement(@RequestBody CarAdvertisement carAdvertisement) throws Exception {
+        return createAdvertisement(Constants.carCategory, carAdvertisement);
+    }
 
-    // todo: change this to use generics.
+
     @PutMapping("/update/{id}")
     public ResponseEntity<CarAdvertisement> updateAdvertisement(@PathVariable("id") String id,
                                                                     @RequestBody CarAdvertisement carAdvertisement)

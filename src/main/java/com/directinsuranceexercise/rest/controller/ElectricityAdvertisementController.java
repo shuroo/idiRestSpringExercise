@@ -3,15 +3,21 @@ package com.directinsuranceexercise.rest.controller;
 import com.directinsuranceexercise.rest.model.CarAdvertisement;
 import com.directinsuranceexercise.rest.model.ElectricityAdvertisement;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
+import com.directinsuranceexercise.rest.utilities.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/electricityAds", produces = "application/json")
+@RequestMapping(value = "/electricityAdvertisements", produces = "application/json")
 public class ElectricityAdvertisementController extends AdvertisementController<ElectricityAdvertisement> {
 
 
+    @RequestMapping(value = "/create",
+            method = RequestMethod.POST)
+    public ResponseEntity<ElectricityAdvertisement> createCarAdvertisement(@RequestBody ElectricityAdvertisement electricityAdvertisement) throws Exception {
+        return createAdvertisement(Constants.carCategory, electricityAdvertisement);
+    }
     @PutMapping("/updateElectricity/{id}")
     public ResponseEntity<GenericAdvertisement> updateAdvertisement(@PathVariable("id") String id,
                                                                     @RequestBody ElectricityAdvertisement electricityAdvertisement) throws Exception {

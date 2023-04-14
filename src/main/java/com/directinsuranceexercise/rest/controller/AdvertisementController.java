@@ -17,8 +17,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class AdvertisementController<T extends GenericAdvertisement> {
 
     protected AdManager advertisementManager = AdManager.getInstance();
+
     protected ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisements();
 
+    public ConcurrentLinkedQueue<GenericAdvertisement> getAllAdvertisements() {
+        return allAdvertisements;
+    }
     @GetMapping("/all")
     public ResponseEntity<List<GenericAdvertisement>> getAll() {
         return ResponseEntity.ok(allAdvertisements.stream().toList());
@@ -27,13 +31,13 @@ public class AdvertisementController<T extends GenericAdvertisement> {
     @GetMapping("/filterCategory/{category}")
     public ResponseEntity<List<GenericAdvertisement>> getByCategory(@PathVariable("category") String category) {
 
-        List<GenericAdvertisement> allByCategory = AdvertisementUtils.filterByCategory(category,allAdvertisements);
+        List<GenericAdvertisement> allByCategory = AdvertisementUtils.filterByCategory(category,allAdvertisements.stream().toList());
         return ResponseEntity.ok(allByCategory);
     }
 
     @GetMapping("/filterPrice/{price}")
     public ResponseEntity<List<GenericAdvertisement>> getByMaxPrice(@PathVariable("price") Integer maxPrice) {
-        List<GenericAdvertisement> listByMaxPrice = AdvertisementUtils.filterByMaxPrice(maxPrice,allAdvertisements);
+        List<GenericAdvertisement> listByMaxPrice = AdvertisementUtils.filterByMaxPrice(maxPrice,allAdvertisements.stream().toList());
         return ResponseEntity.ok(listByMaxPrice);
     }
 
@@ -59,22 +63,20 @@ public class AdvertisementController<T extends GenericAdvertisement> {
      * @param ad
      * @return
      */
-    protected synchronized GenericAdvertisement preCreateAd(GenericAdvertisement ad) throws Exception {
-        AdvertisementUtils.generateAndSetId(ad);
-        if (AdvertisementUtils.findById(ad.getId(),allAdvertisements) != null) {
-                throw new Exception("The following ID already exists in the system. method is aborting.");
-            }
-        return ad;
-    }
+
+////////////////////////////////////////////////////////////////////
 
 
-
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<T> createAdvertisement(@RequestBody T advertisement) throws Exception {
+    protected ResponseEntity<T> createAdvertisement(String category, T advertisement) throws Exception {
         // Generate a new ID for the advertisement and add it to the list
-        preCreateAd(advertisement);
+        AdvertisementUtils.generateAndSetId(advertisement);
+
+        if (AdvertisementUtils.findById(advertisement.getId(),allAdvertisements) != null) {
+            throw new Exception("The following ID already exists in the system. method is aborting.");
+        }
         allAdvertisements.add((T)advertisement);
-        return ResponseEntity.ok().body((T)advertisement);
+        return ResponseEntity.ok((T)advertisement);
+
     }
 
 
@@ -107,7 +109,7 @@ public class AdvertisementController<T extends GenericAdvertisement> {
     @DeleteMapping("/{id}")
     public boolean deleteAdvertisement(@PathVariable("id") String id) {
 
-        return allAdvertisements.removeIf(user -> user.getId().equals(id));
+        return allAdvertisements.removeIf(ad -> ad.getId().equals(id));
     }
 
 

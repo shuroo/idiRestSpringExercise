@@ -1,12 +1,19 @@
 package com.directinsuranceexercise.rest.view;
 
+import com.directinsuranceexercise.rest.controller.AdvertisementController;
 import com.directinsuranceexercise.rest.model.*;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.Constants;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -17,7 +24,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class AdvertisementView extends VerticalLayout {
     private final RestTemplate restTemplate;
 
-    private ConcurrentLinkedQueue allAds = AdManager.getInstance().getAdvertisements();
+    private final String[] categoryOptions = { "All", Constants.assetCategory, Constants.carCategory, Constants.electricityCategory };
+
+    private ComboBox<String> categoryDropdown;
+    private Button filterButton;
+
+    private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
+
+
+    private Grid<GenericAdvertisement> grid;
 
     private Grid buildGenericGrid(){
         Grid<GenericAdvertisement> grid = new Grid<>();
@@ -30,11 +45,31 @@ public class AdvertisementView extends VerticalLayout {
         return grid;
     }
 
+    private void filterByCategory() {
+        String category = categoryDropdown.getValue();
+        if (category.equals("All")) {
+            grid.setItems(allAds);
+        } else {
+            List<GenericAdvertisement> filteredAds = AdvertisementUtils.filterByCategory(category, allAds);
+            grid.setItems(filteredAds);
+//            if (category.equals(Constants.assetCategory)) {
+//                remove();
+//                add(buildAssetGrid());
+//            } else if (category.equals(Constants.carCategory)) {
+//                remove(grid);
+//                add(buildCarGrid());
+//            } else if (category.equals(Constants.electricityCategory)) {
+//                remove(grid);
+//                add(buildElectronicsGrid());
+          }
+        }
+
+
 
     private Grid buildAssetGrid(){
-        List<AssetAdvertisement> assetAds = AdvertisementUtils.filterByCategory(Constants.assetCategory,allAds);
+        List<GenericAdvertisement> assetAds = AdvertisementUtils.filterByCategory(Constants.assetCategory,allAds);
         Grid<AssetAdvertisement> grid = new Grid<>();
-        grid.setItems(assetAds);
+        grid.setItems(AdvertisementUtils.convertToAssetAds(assetAds));
         grid.addColumn(AssetAdvertisement::getId).setHeader("ID");
         grid.addColumn(AssetAdvertisement::getAssetAdType).setHeader("Type");
         grid.addColumn(AssetAdvertisement::getPrice).setHeader("Price");
@@ -46,9 +81,9 @@ public class AdvertisementView extends VerticalLayout {
     }
 
     private Grid buildCarGrid(){
-        List<CarAdvertisement> carAds = AdvertisementUtils.filterByCategory(Constants.carCategory,allAds);
+        List<GenericAdvertisement> carAds = AdvertisementUtils.filterByCategory(Constants.carCategory,allAds);
         Grid<CarAdvertisement> grid = new Grid<>();
-        grid.setItems(carAds);
+        grid.setItems(AdvertisementUtils.convertToCarAds(carAds));
         grid.addColumn(CarAdvertisement::getId).setHeader("ID");
         grid.addColumn(CarAdvertisement::getManufacturer).setHeader("Manifecturer");
         grid.addColumn(CarAdvertisement::getPrice).setHeader("Price");
@@ -61,9 +96,9 @@ public class AdvertisementView extends VerticalLayout {
     }
 
     private Grid buildElectronicsGrid(){
-        List<ElectricityAdvertisement> electricityAdvertisements = AdvertisementUtils.filterByCategory(Constants.electricityCategory,allAds);
+        List<GenericAdvertisement> electricityAdvertisements = AdvertisementUtils.filterByCategory(Constants.electricityCategory,allAds);
         Grid<ElectricityAdvertisement> grid = new Grid<>();
-        grid.setItems(electricityAdvertisements);
+        grid.setItems(AdvertisementUtils.convertToElectronicAds(electricityAdvertisements));
         grid.addColumn(ElectricityAdvertisement::getId).setHeader("ID");
         grid.addColumn(ElectricityAdvertisement::getElectricityType).setHeader("Type");
         grid.addColumn(ElectricityAdvertisement::getPrice).setHeader("Price");
@@ -72,29 +107,34 @@ public class AdvertisementView extends VerticalLayout {
         grid.addColumn(ElectricityAdvertisement::getContactPhoneNumber).setHeader("ContactPhone");
         return grid;
     }
-//    private Grid<GenericAdvertisement> filterByCategory(String category) throws Exception {
-//        List<GenericAdvertisement> ads = AdvertisementUtils.filterByCategory(category, AdManager.getInstance().getAdvertisements());
-//        if (category.equals(Constants.assetCategory)) {
-//            return buildAssetGrid(AdvertisementUtils.convertToAssetAds(ads));
-//        } else if (category.equals(Constants.carCategory)) {
-//            return buildCarGrid(AdvertisementUtils.convertToCarAds(ads));
-//        } else if (category.equals(Constants.electricityCategory)) {
-//            return buildElectronicsGrid(AdvertisementUtils.convertToElectronicAds(ads));
-//        }
-//        throw new Exception("Invalid or unknown category detected. aborting.");
-//    }
     public AdvertisementView(RestTemplate restTemplate) {
          this.restTemplate = restTemplate;
-        Tab tab0 = new Tab("Add or Edit Advertisement");
-        Tab tab1 = new Tab("All Advertisements");
-        tab1.add(buildGenericGrid());
-        Tab tab2 = new Tab("Asset Advertisements");
-        tab2.add(buildAssetGrid());
-        Tab tab3 = new Tab("Car Advertisements");
-        tab3.add(buildCarGrid());
-        Tab tab4 = new Tab("Electronic Advertisements");
-        tab4.add(buildElectronicsGrid());
-        add(tab0,tab1,tab2,tab3,tab4);
+        //Tab tab0 = new Tab("Add or Edit Advertisement");
+//        Tab tab1 = new Tab("All Advertisements");
+//        tab1.add(buildGenericGrid());
+//        Tab tab2 = new Tab("Asset Advertisements");
+//        tab2.add(buildAssetGrid());
+//        Tab tab3 = new Tab("Car Advertisements");
+//        tab3.add(buildCarGrid());
+//        Tab tab4 = new Tab("Electronic Advertisements");
+//        tab4.add(buildElectronicsGrid());
+//        HorizontalLayout hl = new HorizontalLayout();
+//        hl.add(tab1,tab2,tab3,tab4);
+       // add(buildAssetGrid());
+
+        // Initialize dropdown list and filter button
+        categoryDropdown = new ComboBox<>("Category", categoryOptions);
+        categoryDropdown.setValue("All");
+        filterButton = new Button("Filter!", e -> filterByCategory());
+
+        // Create the grid and add to the view
+        grid = buildGenericGrid();
+        add(new HorizontalLayout(categoryDropdown, new VerticalLayout(new Label("Filter by Category"),filterButton)), grid);
+
+//        Grid grid = new Grid<>(GenericAdvertisement.class);
+//        grid.setColumns("id", "category", "price", "contactName", "contactPhoneNumber");
+//        grid.setItems(allAds);
+//        add(grid);
     }
 }
 

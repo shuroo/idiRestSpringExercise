@@ -33,11 +33,11 @@ public class AdvertisementUtils {
             }
         }
     }
-    public static List<GenericAdvertisement> filterByCategory(String category, ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements){
+    public static List<GenericAdvertisement> filterByCategory(String category, List<GenericAdvertisement> allAdvertisements){
         return allAdvertisements.stream().filter(ad -> ad.getCategory().equals(category)).toList();
     }
 
-    public static List<GenericAdvertisement> filterByMaxPrice(Integer maxPrice, ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements){
+    public static List<GenericAdvertisement> filterByMaxPrice(Integer maxPrice, List<GenericAdvertisement> allAdvertisements){
         return allAdvertisements.stream().filter(ad -> ad.getPrice()<= maxPrice).toList();
     }
 
