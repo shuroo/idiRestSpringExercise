@@ -4,7 +4,6 @@ import com.directinsuranceexercise.rest.model.AssetAdvertisement;
 import com.directinsuranceexercise.rest.model.CarAdvertisement;
 import com.directinsuranceexercise.rest.model.ElectricityAdvertisement;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +36,10 @@ public class AdvertisementUtils {
         return allAdvertisements.stream().filter(ad -> ad.getCategory().equals(category)).toList();
     }
 
-    public static List<GenericAdvertisement> filterByMaxPrice(Integer maxPrice, List<GenericAdvertisement> allAdvertisements){
+    public static List<GenericAdvertisement> filterByMaxPrice(Double maxPrice, List<GenericAdvertisement> allAdvertisements){
+        if (maxPrice == null){
+            return null;
+        }
         return allAdvertisements.stream().filter(ad -> ad.getPrice()<= maxPrice).toList();
     }
 

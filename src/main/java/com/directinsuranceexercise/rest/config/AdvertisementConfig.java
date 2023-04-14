@@ -6,14 +6,9 @@ import com.directinsuranceexercise.rest.model.CarAdvertisement;
 import com.directinsuranceexercise.rest.model.ElectricityAdvertisement;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.Constants;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-
-import java.util.List;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -31,7 +26,7 @@ public class AdvertisementConfig {
     // Sample asset config to add to the list on application startup:
 
     @Value("${assetAd.price}")
-    private int assetPrice;
+    private double assetPrice;
 
     @Value("${assetAd.assetSize}")
     private int assetSize;
@@ -45,7 +40,7 @@ public class AdvertisementConfig {
     // Sample car config to add to the list on application startup:
 
     @Value("${carAd.price}")
-    private int carPrice;
+    private double carPrice;
 
     @Value("${carAd.model}")
     private String carModel;
@@ -60,7 +55,7 @@ public class AdvertisementConfig {
     private Integer carKm;
 
     @Value("${electronicsAd.price}")
-    private int electricityPrice;
+    private double electricityPrice;
 
     @Value("${electronicsAd.condition}")
     private String electricityCondition;

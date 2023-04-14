@@ -36,7 +36,7 @@ public class AdvertisementController<T extends GenericAdvertisement> {
     }
 
     @GetMapping("/filterPrice/{price}")
-    public ResponseEntity<List<GenericAdvertisement>> getByMaxPrice(@PathVariable("price") Integer maxPrice) {
+    public ResponseEntity<List<GenericAdvertisement>> getByMaxPrice(@PathVariable("price") Double maxPrice) {
         List<GenericAdvertisement> listByMaxPrice = AdvertisementUtils.filterByMaxPrice(maxPrice,allAdvertisements.stream().toList());
         return ResponseEntity.ok(listByMaxPrice);
     }

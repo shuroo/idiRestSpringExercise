@@ -13,10 +13,10 @@ public class GenericAdvertisement {
     private String category = Constants.genericCategory;
     private String contactName;
     private String contactPhoneNumber;
-    private Integer price;
+    private Double price;
 
     public GenericAdvertisement(){}
-    public GenericAdvertisement(String id, String category, String contactName, String contactPhoneNumber, Integer price) {
+    public GenericAdvertisement(String id, String category, String contactName, String contactPhoneNumber, Double price) {
         this.id = id;
         this.category = category;
         this.contactName = contactName;
@@ -60,11 +60,11 @@ public class GenericAdvertisement {
         logger.info("setContactPhoneNumber() called with phone number: " + contactPhoneNumber);
     }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
         logger.info("setPrice() called with price: " + price);
     }
