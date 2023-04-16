@@ -3,14 +3,10 @@ package com.directinsuranceexercise.rest.view;
 import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
-import com.directinsuranceexercise.rest.utilities.Constants;
 import com.directinsuranceexercise.rest.utilities.ViewsUtils;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -23,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-///@CssImport(value = "../styles.css", themeFor = "vaadin-button")
     @Route(value = "/filterByMaxPrice")
     public class FilterByMaxPriceView extends VerticalLayout {
         private final RestTemplate restTemplate;
@@ -67,7 +62,6 @@ import java.util.logging.Logger;
                     .withValidator(new DoubleRangeValidator("Price must be between 0 and 1,000,000", 0.0, 1000000.0))
                     .bind(maxPriceBindery -> null, (maxPriceBindery, value) -> {
                         // Do nothing here, just need a write-only binding
-                        //todo: what's here?
                     });
 
             filterButton = new Button("Filter!", e -> filterByMaxPrice());

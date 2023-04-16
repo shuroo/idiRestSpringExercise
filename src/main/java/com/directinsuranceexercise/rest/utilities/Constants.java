@@ -8,7 +8,7 @@ public class Constants {
 
     public static final String electricityCategory = "electricity";
 
-    public static final String genericCategory = "generic";
+    public static final String genericCategory = "All";
 
     public static final String createOperation = "create";
 

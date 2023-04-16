@@ -1,8 +1,10 @@
 package com.directinsuranceexercise.rest.model;
 
+import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.Constants;
 
 import java.util.logging.Logger;
+
 
 public class GenericAdvertisement {
     private static final Logger logger = Logger.getLogger(GenericAdvertisement.class.getName());
@@ -16,9 +18,8 @@ public class GenericAdvertisement {
     private Double price;
 
     public GenericAdvertisement(){}
-    public GenericAdvertisement(String id, String category, String contactName, String contactPhoneNumber, Double price) {
-        this.id = id;
-        this.category = category;
+    public GenericAdvertisement(Double price, String contactName, String contactPhoneNumber) {
+        this.id = AdvertisementUtils.createId();
         this.contactName = contactName;
         this.contactPhoneNumber = contactPhoneNumber;
         this.price = price;

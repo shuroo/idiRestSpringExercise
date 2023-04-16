@@ -51,6 +51,9 @@ public class AdvertisementConfig {
     @Value("${carAd.color}")
     private String carColor;
 
+    @Value("{carAd.manifacturer}")
+    private String manifacturer;
+
     @Value("${carAd.carKm}")
     private Integer carKm;
 
@@ -89,6 +92,8 @@ public class AdvertisementConfig {
         ad.setYear(carYear);
         ad.setKm(carKm);
         ad.setModel(carModel);
+        ad.setColor(carColor);
+        ad.setManufacturer(manifacturer);
         return ad;
     }
 

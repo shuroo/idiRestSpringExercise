@@ -1,6 +1,5 @@
 package com.directinsuranceexercise.rest.controller;
 
-import com.directinsuranceexercise.rest.model.CarAdvertisement;
 import com.directinsuranceexercise.rest.model.ElectricityAdvertisement;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.Constants;

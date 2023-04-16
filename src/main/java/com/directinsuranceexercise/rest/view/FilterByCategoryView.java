@@ -1,6 +1,7 @@
 package com.directinsuranceexercise.rest.view;
 
-import com.directinsuranceexercise.rest.model.*;
+import com.directinsuranceexercise.rest.model.AdManager;
+import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.Constants;
 import com.directinsuranceexercise.rest.utilities.ViewsUtils;
@@ -19,9 +20,6 @@ import java.util.List;
 @Route(value = "/filterByCategory") // , layout = MainLayout.class
 public class FilterByCategoryView extends VerticalLayout {
     private final RestTemplate restTemplate;
-
-    private final String[] categoryOptions = { "All", Constants.assetCategory, Constants.carCategory, Constants.electricityCategory };
-
     private ComboBox<String> categoryDropdown;
     private Button filterButton;
 
@@ -32,7 +30,7 @@ public class FilterByCategoryView extends VerticalLayout {
 
     private void filterByCategory() {
         String category = categoryDropdown.getValue();
-        if (category.equals("All")) {
+        if (category.equals(Constants.genericCategory)) {
             grid.setItems(allAds);
         } else {
             List<GenericAdvertisement> filteredAds = AdvertisementUtils.filterByCategory(category, allAds);
@@ -47,8 +45,7 @@ public class FilterByCategoryView extends VerticalLayout {
 
 
         // Initialize dropdown list and filter button
-        categoryDropdown = new ComboBox<>("Category", categoryOptions);
-        categoryDropdown.setValue("All");
+        categoryDropdown = ViewsUtils.getCategoryOptions();
         filterButton = new Button("Filter!", e -> filterByCategory());
 
         // Create the grid and add to the view

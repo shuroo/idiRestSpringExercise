@@ -16,9 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @SpringBootApplication
-//@Theme(value = Lumo.class, variant = Lumo.DARK)
 @PWA(name = "DirectInsuranceExercise", shortName = "DirectInsuranceExercise")
-//@CssImport(value = "./styles/shared-styles.css")
 @Push
 public class RestApplication implements AppShellConfigurator {
 	@Autowired

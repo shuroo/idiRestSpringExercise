@@ -17,6 +17,8 @@ public class AdvertisementUtils {
 
     private static final java.util.logging.Logger logger = Logger.getLogger(AdvertisementUtils.class.getName());
 
+
+
     /**
      * Method to perform 'jump' by id - to the top of the list
      * @param id
@@ -86,8 +88,12 @@ public class AdvertisementUtils {
      */
     public static void generateAndSetId(GenericAdvertisement advertisement) {
         // Generate a new ID for the advertisement, use UUID to ensure uniqueness
-        String id = UUID.randomUUID().toString();
+        String id = createId();
         advertisement.setId(id);
+    }
+
+    public static String createId(){
+        return UUID.randomUUID().toString();
     }
 
     public static GenericAdvertisement findById(String id, ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements){

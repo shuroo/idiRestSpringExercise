@@ -7,6 +7,7 @@ import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.view.FilterByCategoryView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -82,6 +83,17 @@ public class ViewsUtils {
         VerticalLayout filterWrapper = new VerticalLayout(new Label(currentPageLbl), filterButton,nxtPageBtn);
         Component maxPriceField = maybeMaxPriceField.orElse(null);
         return new HorizontalLayout( maxPriceField,filterWrapper);
+    }
+
+    public static ComboBox<String> getCategoryOptions(){
+        String[] categoryOptions = { Constants.genericCategory, Constants.assetCategory, Constants.carCategory, Constants.electricityCategory };
+
+        ComboBox<String> categoryDropdown;
+        // Initialize dropdown list and filter button
+        categoryDropdown = new ComboBox<>("Category", categoryOptions);
+        categoryDropdown.setValue(Constants.genericCategory);
+
+        return categoryDropdown;
     }
 
     public static void setBorder(Component component){

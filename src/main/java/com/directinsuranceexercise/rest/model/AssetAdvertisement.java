@@ -1,8 +1,8 @@
 package com.directinsuranceexercise.rest.model;
 
 import com.directinsuranceexercise.rest.utilities.Constants;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+//import jakarta.validation.constraints.NotEmpty;
+//import jakarta.validation.constraints.Pattern;
 
 public class AssetAdvertisement extends GenericAdvertisement{
 
@@ -10,8 +10,8 @@ public class AssetAdvertisement extends GenericAdvertisement{
     protected Integer assetSize;
     protected Integer numberOfRooms ;
 
-    @NotEmpty
-    @Pattern(regexp = "^(sell|rent)$", message = "Asset ad-type must be either 'Sell' or 'Rent'")
+   // @NotEmpty
+   // @Pattern(regexp = "^(sell|rent)$", message = "Asset ad-type must be either 'Sell' or 'Rent'")
     protected String assetAdType;
 
     public String getAssetAdType() {
@@ -38,5 +38,11 @@ public class AssetAdvertisement extends GenericAdvertisement{
         this.numberOfRooms = numberOfRooms;
     }
 
+    public AssetAdvertisement(){}
+    public AssetAdvertisement(Double price,  String contactName, String contactPhone,int numberOfRooms, int assetSize){
+        super(  price,   contactName, contactPhone);
+        this.numberOfRooms = numberOfRooms;
+        this.assetSize = assetSize;
+    }
 
 }

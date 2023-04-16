@@ -4,7 +4,7 @@ import com.directinsuranceexercise.rest.utilities.Constants;
 
 public class CarAdvertisement extends GenericAdvertisement {
 
-    protected String manufacturer;
+    protected String manifacturer;
     protected String model;
     protected int year;
     protected int km;
@@ -12,11 +12,11 @@ public class CarAdvertisement extends GenericAdvertisement {
 
     protected String category = Constants.carCategory;
     public String getManufacturer() {
-        return manufacturer;
+        return manifacturer;
     }
 
     public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
+        this.manifacturer = manufacturer;
     }
 
     public String getModel() {
