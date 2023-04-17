@@ -1,105 +1,319 @@
-//package com.directinsuranceexercise.vaadin;
-//
-//import com.directinsuranceexercise.rest.model.AssetAdvertisement;
-//import com.directinsuranceexercise.rest.utilities.Constants;
-//import com.vaadin.flow.component.button.Button;
-//import com.vaadin.flow.component.formlayout.FormLayout;
-//import com.vaadin.flow.component.grid.Grid;
-//import com.vaadin.flow.component.html.H1;
-//import com.vaadin.flow.component.html.H2;
-//import com.vaadin.flow.component.notification.Notification;
-//import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-//import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-//import com.vaadin.flow.component.textfield.IntegerField;
-//import com.vaadin.flow.component.textfield.TextField;
-//import com.vaadin.flow.data.binder.BeanValidationBinder;
-//import com.vaadin.flow.data.binder.Binder;
-//import com.vaadin.flow.data.binder.ValidationException;
-//import com.vaadin.flow.data.provider.DataProvider;
-//import com.vaadin.flow.data.provider.ListDataProvider;
-//import com.vaadin.flow.router.Route;
-//import org.springframework.beans.factory.annotation.Autowired;
-//
-//@Route("assetAdvertisements")
-//public class AssetAdvertisementView extends VerticalLayout {
-//
-//    private Grid<AssetAdvertisement> grid = new Grid<>(AssetAdvertisement.class);
-//    private TextField assetName = new TextField("Asset Name");
-//    private TextField assetDescription = new TextField("Asset Description");
-//    private IntegerField assetSize = new IntegerField("Asset Size");
-//    private TextField assetAdType = new TextField("Asset Ad Type");
-//    private IntegerField numberOfRooms = new IntegerField("Number of Rooms");
-//
-//    private Button create = new Button("Create");
-//    private Button update = new Button("Update");
-//    private Button delete = new Button("Delete");
-//
-//    private Binder<AssetAdvertisement> binder = new BeanValidationBinder<>(AssetAdvertisement.class);
-//    private AssetAdvertisement assetAdvertisement = new AssetAdvertisement();
-//
-//    private ListDataProvider<AssetAdvertisement> dataProvider;
-//
-//    @Autowired
-//    private AssetAdvertisementClient assetAdvertisementClient;
-//
-//    public AssetAdvertisementView() {
-//        setSizeFull();
-//        HorizontalLayout horizontalLayout = new HorizontalLayout();
-//        horizontalLayout.add(assetName, assetDescription, assetSize, assetAdType, numberOfRooms);
-//        add(new H1("Asset Advertisements"), createHeader(), horizontalLayout, createGrid(), createFormLayout());
-//        binder.bindInstanceFields(this);
-//
-//        create.addClickListener(e -> {
-//            try {
-//                binder.writeBean(assetAdvertisement);
-//             //   assetAdvertisement.setAssetCategory(Constants.assetCategory);
-//             //   assetAdvertisementClient.createAssetAdvertisement(assetAdvertisement);
-//                dataProvider.getItems().add(assetAdvertisement);
-//                dataProvider.refreshAll();
-//                Notification.show("Asset Advertisement created successfully.");
-//             //   clearFormFields();
-//            } catch (ValidationException ex) {
-//                Notification.show("Please check the input fields.");
-//            }
-//        });
-//
-//
-//        private void clearFormFields() {
-//            nameField.clear();
-//            emailField.clear();
-//        }
-//
-//        update.addClickListener(e -> {
-//            try {
-//                binder.writeBean(assetAdvertisement);
-//                assetAdvertisementClient.updateAssetAdvertisement(assetAdvertisement.getId(), assetAdvertisement);
-//                dataProvider.refreshAll();
-//                Notification.show("Asset Advertisement updated successfully.");
-//                clearFormFields();
-//            } catch (ValidationException ex) {
-//                Notification.show("Please check the input fields.");
-//            }
-//        });
-//
-//        delete.addClickListener(e -> {
-//            // assetAdvertisementClient.deleteAssetAdvertisement(assetAdvertisement.getId());
-//            dataProvider.getItems().remove(assetAdvertisement);
-//            dataProvider.refreshAll();
-//            Notification.show("Asset Advertisement deleted successfully.");
-//            // clearFormFields();
-//        });
-//
-//        grid.asSingleSelect().addValueChangeListener(event -> {
-//            assetAdvertisement = event.getValue();
-//            binder.setBean(assetAdvertisement);
-//        });
-//    }
-//
-//    private HorizontalLayout createHeader() {
-//        H2 header = new H2("Create, Read, Update and Delete Asset Advertisements");
-//        HorizontalLayout horizontalLayout = new HorizontalLayout(header);
-//        horizontalLayout.setWidth("100%");
-//        horizontalLayout.setAlignItems(Alignment.CENTER);
-//        return horizontalLayout;
-//    }
-//}
+package com.directinsuranceexercise.rest.view;
+
+import com.directinsuranceexercise.rest.model.AdManager;
+import com.directinsuranceexercise.rest.model.GenericAdvertisement;
+import com.directinsuranceexercise.rest.utilities.Constants;
+import com.directinsuranceexercise.rest.utilities.ViewsUtils;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.Route;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+
+@Route(value = "/")
+public class MainView extends VerticalLayout {
+
+    private Grid<GenericAdvertisement> grid;
+
+    private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
+
+    final String createOperation = "CREATE";
+    final String updateOperation = "UPDATE";
+    final String deleteOperation = "DELETE";
+    final String jumpOperation = "JumpToTop";
+
+    final String baseUrl = "http://localhost:8080/";
+
+    final String pageLabelText = "CRUD Advertisements";
+    private final TextArea jsonTextArea;
+    private final Button createButton;
+    private final Button updateButton;
+    private final Button deleteButton;
+    private final Button jumpToTop;
+
+    private final ComboBox<String> categories = ViewsUtils.getCategoryOptions();
+    private RestTemplate restTemplate = new RestTemplate();
+    private final Binder<JsonBean> binder = new Binder<>(JsonBean.class);
+    private final JsonBean bean = new JsonBean();
+
+    private void setOnClickHandler(Grid<GenericAdvertisement> grid){
+        grid.addItemClickListener(event -> {
+            // get the selected row's data as a JsonObject
+            GenericAdvertisement ad = event.getItem();
+            JSONObject jsonAd = new JSONObject();
+            try {
+                jsonAd.put("id",ad.getId());
+                jsonAd.put("price",ad.getPrice());
+                jsonAd.put("contactName",ad.getContactName());
+                jsonAd.put("contactPhoneNumber",ad.getContactPhoneNumber());
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+            // set the JSON string as the text of the text area
+            jsonTextArea.setValue(jsonAd.toString());
+        });
+    }
+
+    private HttpMethod matchHttpMethod(String httpMethodString){
+
+                switch(httpMethodString) {
+                    case createOperation:
+                        return HttpMethod.POST;
+                    case updateOperation:
+                        return HttpMethod.PUT;
+                    case deleteOperation:
+                        return HttpMethod.DELETE;
+                    case jumpOperation:
+                        return HttpMethod.GET;
+                }
+
+                return HttpMethod.POST;
+
+    }
+    private String buildUrlPrefixByCategoryAndHttpMethod(String httpMethod,JSONObject requestBody) throws JSONException{
+        String urlPrefix = "";
+
+        // todo: to support update we need something like: assetAdvertisements/{id}. can we switch all to generic operations?
+        if(httpMethod.equals(jumpOperation) || httpMethod.equals(deleteOperation)){
+            String id = requestBody.getString("id");
+            return "assetAdvertisements/"+id;
+        }
+        String category = categories.getValue();
+        switch (category) {
+            case Constants.genericCategory:
+                throw new JSONException("Invalid category, please select one and try again");
+            case Constants.assetCategory:
+                urlPrefix = "assetAdvertisements/";
+                return urlPrefix;
+            case Constants.carCategory:
+                urlPrefix = "carAdvertisements/";
+                return urlPrefix;
+            case Constants.electricityCategory:
+                urlPrefix = "electricityAdvertisements/";
+                return urlPrefix;
+        }
+
+        return urlPrefix;
+    }
+
+    private boolean validateFullJsonStructure(JSONObject requestBody, String httpMethod) throws JSONException {
+        requestBody.getDouble("price");
+        requestBody.getString("contactPhoneNumber");
+        requestBody.getString("contactName");
+        String category = categories.getValue();
+        switch (category) {
+            case Constants.genericCategory:
+                Notification.show("Please choose a category", 3000, Notification.Position.BOTTOM_CENTER);
+                return false;
+            case Constants.assetCategory:
+                requestBody.getInt("assetSize");
+                requestBody.getInt("numberOfRooms");
+                return true;
+            case Constants.carCategory:
+                requestBody.getString("color");
+                requestBody.getString("model");
+                requestBody.getString("manifacturer");
+                requestBody.getInt("year");
+                requestBody.getInt("km");
+                return true;
+            case Constants.electricityCategory:
+                requestBody.getString("electricityType");
+                requestBody.getString("condition");
+                return true;
+        }
+
+        return true;
+    }
+
+    /**
+     * Make sure the request has all the needed fields
+     * @param requestBody
+     * @param httpMethod
+     * @return
+     * @throws JSONException
+     */
+
+    //todo: add all the below to the constants:
+    private boolean validateRequest(JSONObject requestBody,String httpMethod) throws JSONException {
+        // for any request except creation, we should verify the id field exists.
+        if(!httpMethod.equals(createOperation)){
+            requestBody.getString("id");
+        }
+        // For 'Create' or 'Edit', verify that we have a full json structure with all the Ad required fields
+        if(httpMethod.equals(createOperation) || httpMethod.equals(createOperation)){
+            return validateFullJsonStructure(requestBody,httpMethod);
+        }
+
+        return true;
+    }
+    /**
+     * Perform CRUD operations as needed
+     */
+    private void performCRUD(Button operationBtn){
+
+        validateJson();
+        String jsonString = jsonTextArea.getValue();
+        JSONTokener tokener = new JSONTokener(jsonString);
+        JSONObject requestBody = null;
+
+        try {
+            requestBody  = new JSONObject(tokener);
+
+            // todo: Change this to use a text field in case of delete or jump
+
+            //todo: move to constants ... etc.
+
+            // todo: one can shorten it if the 'create' was generic!
+
+                // Send the request
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                String category = categories.getValue();
+                requestBody.put("category",category);
+                HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
+
+                HttpMethod method = null;
+                String urlSuffix = operationBtn.getText().toLowerCase();
+                String urlPrefix = null;
+                //todo: change requestBody param name
+
+                String httpMethodString = operationBtn.getText();
+                validateRequest(requestBody,httpMethodString);
+
+//                //todo: seperate this to methods:
+//                switch(httpMethodString){
+//                    case createOperation:
+//                        method = HttpMethod.POST;
+//                    case updateOperation:
+//                        method = HttpMethod.PUT;
+//                        String id = requestBody.getString("id");
+//                        urlSuffix = urlSuffix+"/"+id;
+//                    case deleteOperation:
+//                        method = HttpMethod.DELETE;
+//                        urlPrefix = "/advertisements/"+id;
+//                    case jumpOperation:
+//                        method = HttpMethod.GET;
+//                        urlPrefix = "advertisements/"+id; // <- todo: this is redundant
+//                }
+
+                urlPrefix = buildUrlPrefixByCategoryAndHttpMethod(httpMethodString,requestBody);
+
+                method = matchHttpMethod( httpMethodString);
+                String url = baseUrl+urlPrefix+"/"+urlSuffix;
+                ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
+
+                // Reload the grid with the updated data
+                allAds = AdManager.getInstance().getAdvertisements().stream().toList();
+                grid.setItems(allAds);
+
+                // Check the response status code
+                if (response.getStatusCode() == HttpStatus.OK) {
+                    Notification.show("Successfully sending http request:"+method+". Response body was:"+response.getBody(), 3000,
+                            Notification.Position.BOTTOM_CENTER);
+                } else {
+                    Notification.show("Error sending http request:"+method+".Detected status:"+response.getStatusCode()+". aborting.", 3000,
+                            Notification.Position.BOTTOM_CENTER);
+                }
+
+
+
+        } catch (JSONException e) {
+            Notification.show("Error detected:"+e.getMessage()+".Aborting, Please try again", 3000,
+                    Notification.Position.BOTTOM_CENTER);
+        }
+        catch (Exception e) {
+            Notification.show("Error detected:"+e.getMessage()+".Aborting, Please try again", 3000,
+                    Notification.Position.BOTTOM_CENTER);
+        }
+
+    }
+    public MainView() {
+        jsonTextArea = new TextArea("Please provide a json entity to create or update");
+        // Resize:
+        jsonTextArea.setWidth("80%");
+        jsonTextArea.setHeight("50%");
+        jsonTextArea.setPlaceholder("Enter a json advertisement input to perform CRUD or select from the list");
+        jsonTextArea.setValueChangeMode(ValueChangeMode.LAZY);
+
+        createButton = new Button(createOperation);
+        updateButton = new Button(updateOperation);
+        deleteButton = new Button(deleteOperation);
+        jumpToTop = new Button(jumpOperation);
+
+        createButton.addClickListener(event ->
+            performCRUD(event.getSource()));
+        updateButton.addClickListener(event -> performCRUD(event.getSource()));
+        deleteButton.addClickListener(event -> performCRUD(event.getSource()));
+        jumpToTop.addClickListener(event -> performCRUD(event.getSource()));
+
+
+        FormLayout formLayout = new FormLayout();
+
+        formLayout.add(jsonTextArea,categories, createButton,updateButton,deleteButton,jumpToTop);
+
+        H1 titleLabel = new H1(pageLabelText);
+        grid = ViewsUtils.buildGenericGrid(allAds);
+        setOnClickHandler(grid);
+
+        add(titleLabel);
+        add(ViewsUtils.buildTopMenu());
+        add(formLayout);
+        add(grid);
+    }
+
+    private void validateJson() {
+        try {
+            // Parse the JSON entered by the user
+            String jsonString = jsonTextArea.getValue();
+            JSONTokener tokener = new JSONTokener(jsonString);
+            JSONObject jsonObject = new JSONObject(tokener);
+
+            // Write the JSON to the bean object
+            binder.writeBean(bean);
+
+        } catch (JSONException e) {
+            // Invalid JSON format
+            jsonTextArea.setErrorMessage("Invalid JSON format: " + e.getMessage());
+            jsonTextArea.setInvalid(true);
+        } catch (ValidationException e) {
+            // Validation failed, show error message...
+            jsonTextArea.setErrorMessage(e.getMessage());
+            jsonTextArea.setInvalid(true);
+        }
+    }
+
+    /**
+     * Private class to validate the given input as json
+     */
+    private static class JsonBean {
+        @javax.validation.constraints.NotNull(message = "JSON Input is Required")
+        @com.fasterxml.jackson.annotation.JsonProperty("json")
+        private String json;
+
+        public String getJson() {
+            return json;
+        }
+
+        public void setJson(String json) {
+            this.json = json;
+        }
+    }
+}
+

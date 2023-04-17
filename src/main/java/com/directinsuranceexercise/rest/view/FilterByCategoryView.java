@@ -8,6 +8,7 @@ import com.directinsuranceexercise.rest.utilities.ViewsUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -25,6 +26,7 @@ public class FilterByCategoryView extends VerticalLayout {
 
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
 
+    private final String pageLabelText = "Filter by Category";
 
     private Grid<GenericAdvertisement> grid;
 
@@ -49,8 +51,14 @@ public class FilterByCategoryView extends VerticalLayout {
         filterButton = new Button("Filter!", e -> filterByCategory());
 
         // Create the grid and add to the view
+
+        H2 titleLabel = new H2(pageLabelText);
         grid = ViewsUtils.buildGenericGrid(allAds);
-        add(new HorizontalLayout(categoryDropdown, new VerticalLayout(new Label("Filter by Category"),filterButton)), grid);
+
+        add(titleLabel);
+        add(ViewsUtils.buildTopMenu());
+        add(new HorizontalLayout(categoryDropdown,
+                new VerticalLayout(new Label(pageLabelText),filterButton)), grid);
     }
 }
 
