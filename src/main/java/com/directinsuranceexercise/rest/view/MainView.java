@@ -1,7 +1,7 @@
 package com.directinsuranceexercise.rest.view;
 
-import com.directinsuranceexercise.rest.model.AdManager;
-import com.directinsuranceexercise.rest.model.GenericAdvertisement;
+import com.directinsuranceexercise.rest.model.*;
+import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.Constants;
 import com.directinsuranceexercise.rest.utilities.ViewsUtils;
 import com.vaadin.flow.component.button.Button;
@@ -9,7 +9,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -24,13 +23,17 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
 
 @Route(value = "/")
 public class MainView extends VerticalLayout {
 
     private Grid<GenericAdvertisement> grid;
 
-    private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
+    private ConcurrentLinkedQueue<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements();
+
+    private static final java.util.logging.Logger logger = Logger.getLogger(AdvertisementUtils.class.getName());
 
     final String createOperation = "CREATE";
     final String updateOperation = "UPDATE";
@@ -51,23 +54,67 @@ public class MainView extends VerticalLayout {
     private final Binder<JsonBean> binder = new Binder<>(JsonBean.class);
     private final JsonBean bean = new JsonBean();
 
-    private void setOnClickHandler(Grid<GenericAdvertisement> grid){
-        grid.addItemClickListener(event -> {
-            // get the selected row's data as a JsonObject
-            GenericAdvertisement ad = event.getItem();
-            JSONObject jsonAd = new JSONObject();
-            try {
+    private void genericAdvertisementAsJson(JSONObject jsonAd,GenericAdvertisement ad) throws JSONException {
                 jsonAd.put("id",ad.getId());
                 jsonAd.put("price",ad.getPrice());
                 jsonAd.put("contactName",ad.getContactName());
                 jsonAd.put("contactPhoneNumber",ad.getContactPhoneNumber());
+    }
 
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
+    private void assetAdvertisementAsJson(JSONObject jsonAd, AssetAdvertisement ad) throws JSONException {
+        // todo: put in constants!!
+        jsonAd.put("numberOfRooms",ad.getNumberOfRooms());
+        jsonAd.put("assetAdType",ad.getAssetAdType());
+        jsonAd.put("assetSize",ad.getAssetSize());
+    }
+
+    private void carAdvertisementAsJson(JSONObject jsonAd, CarAdvertisement ad) throws JSONException {
+        jsonAd.put("color",ad.getColor());
+        jsonAd.put("model",ad.getPrice());
+        jsonAd.put("manifacturer",ad.getManufacturer());
+        jsonAd.put("year",ad.getYear());
+        jsonAd.put("km",ad.getKm());
+    }
+
+    private void electronicsAdvertisementAsJson(JSONObject jsonAd, ElectricityAdvertisement ad) throws JSONException {
+        // todo: put in constants!!
+        jsonAd.put("condition",ad.getCondition());
+        jsonAd.put("electricityType",ad.getElectricityType());
+    }
+
+    private JSONObject buildAdvertisementAsJson(GenericAdvertisement ad, GenericAdvertisement extendedAd){
+        JSONObject jsonAd = new JSONObject();
+        String adCategory = ad.getCategory();
+        try {
+            genericAdvertisementAsJson(jsonAd,ad);
+            if(adCategory.equals(Constants.assetCategory)){
+                assetAdvertisementAsJson(jsonAd,(AssetAdvertisement) extendedAd);
+
+            } else if(adCategory.equals(Constants.carCategory)){
+                carAdvertisementAsJson(jsonAd,(CarAdvertisement) extendedAd);
+
+            }else if(adCategory.equals(Constants.electricityCategory)){
+                electronicsAdvertisementAsJson(jsonAd,(ElectricityAdvertisement) extendedAd);
+
             }
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return jsonAd;
+    }
+    private void setOnClickHandler(Grid<GenericAdvertisement> grid){
+        grid.addItemClickListener(event -> {
+            // get the selected row's data as a JsonObject
+            GenericAdvertisement ad = event.getItem();
+            // Get the advertisement with its specific fields and structure of the sub-classes ( car, asset , etc).
+            GenericAdvertisement extendedAd = AdvertisementUtils.findById(ad.getId(),allAds);
+            JSONObject jsonAd = buildAdvertisementAsJson(ad,extendedAd);
 
             // set the JSON string as the text of the text area
             jsonTextArea.setValue(jsonAd.toString());
+            String currentCategory = ad.getCategory();
+            categories.setValue(currentCategory);
         });
     }
 
@@ -96,7 +143,7 @@ public class MainView extends VerticalLayout {
             return id;
         }
 
-        return "";
+        return createOperation.toLowerCase();
     }
     private String buildUrlPrefixByCategory() throws JSONException{
         String urlPrefix = "";
@@ -211,11 +258,11 @@ public class MainView extends VerticalLayout {
                 method = matchHttpMethod( httpMethodString);
                 String url = baseUrl+urlPrefix+"/"+urlSuffix;
 
-                System.out.println("*****"+url+","+method);
+                logger.info("Sending request of type:"+httpMethodString+" to url:"+url);
                 ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
 
                 // Reload the grid with the updated data
-                allAds = AdManager.getInstance().getAdvertisements().stream().toList();
+                allAds = AdManager.getInstance().getAdvertisements();
                 grid.setItems(allAds);
 
                 // Check the response status code
@@ -239,11 +286,15 @@ public class MainView extends VerticalLayout {
         }
 
     }
+
+    private void setTextAreaSize(){
+        jsonTextArea.setWidth("80%");
+        jsonTextArea.setHeight("70%");
+    }
     public MainView() {
         jsonTextArea = new TextArea("Please provide a json entity to create or update");
         // Resize:
-        jsonTextArea.setWidth("80%");
-        jsonTextArea.setHeight("50%");
+        setTextAreaSize();
         jsonTextArea.setPlaceholder("Enter a json advertisement input to perform CRUD or select from the list");
         jsonTextArea.setValueChangeMode(ValueChangeMode.LAZY);
 
@@ -264,7 +315,7 @@ public class MainView extends VerticalLayout {
         formLayout.add(jsonTextArea,categories, createButton,updateButton,deleteButton,jumpToTop);
 
         H1 titleLabel = new H1(pageLabelText);
-        grid = ViewsUtils.buildGenericGrid(allAds);
+        grid = ViewsUtils.buildGenericGrid(allAds.stream().toList());
         setOnClickHandler(grid);
 
         add(titleLabel);

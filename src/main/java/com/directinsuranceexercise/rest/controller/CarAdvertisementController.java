@@ -38,9 +38,7 @@ public class CarAdvertisementController extends AdvertisementController implemen
         existingCarAdvertisement.setManufacturer(carAdvertisement.getManufacturer());
         existingCarAdvertisement.setModel(carAdvertisement.getModel());
         existingCarAdvertisement.setYear(carAdvertisement.getYear());
-        //todo: test edit method. should we synch that?
-        allAdvertisements.remove(carAdvertisement);
-        allAdvertisements.add(existingCarAdvertisement);
+        // no add or remove, this happened in the parent already
         return ResponseEntity.ok(existingCarAdvertisement);
     }
 

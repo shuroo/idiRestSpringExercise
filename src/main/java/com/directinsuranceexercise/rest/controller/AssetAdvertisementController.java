@@ -46,8 +46,6 @@ public class AssetAdvertisementController extends AdvertisementController implem
         existingAssetAdvertisement.setAssetSize(assetAdvertisement.getAssetSize());
         existingAssetAdvertisement.setAssetAdType(assetAdvertisement.getAssetAdType());
         existingAssetAdvertisement.setNumberOfRooms(assetAdvertisement.getNumberOfRooms());
-        allAdvertisements.remove(assetAdvertisement);
-        allAdvertisements.add(existingAssetAdvertisement);
         return ResponseEntity.ok(existingAssetAdvertisement);
     }
 }

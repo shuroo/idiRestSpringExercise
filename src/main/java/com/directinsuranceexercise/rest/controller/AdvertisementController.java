@@ -23,30 +23,9 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
     protected AdManager advertisementManager = AdManager.getInstance();
 
     protected ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisements();
-//
-//    public ConcurrentLinkedQueue<GenericAdvertisement> getAllAdvertisements() {
-//        return allAdvertisements;
-//    }
-//    @GetMapping("/all")
-//    public ResponseEntity<List<GenericAdvertisement>> getAll() {
-//        return ResponseEntity.ok(allAdvertisements.stream().toList());
-//    }
-
-//    @GetMapping("/filterCategory/{category}")
-//    public ResponseEntity<List<GenericAdvertisement>> getByCategory( String category) {
-//
-//        List<GenericAdvertisement> allByCategory = AdvertisementUtils.filterByCategory(category,allAdvertisements.stream().toList());
-//        return ResponseEntity.ok(allByCategory);
-//    }
-
-//    @GetMapping("/filterPrice/{price}")
-//    public ResponseEntity<List<GenericAdvertisement>> getByMaxPrice(@PathVariable("price") Double maxPrice) {
-//        List<GenericAdvertisement> listByMaxPrice = AdvertisementUtils.filterByMaxPrice(maxPrice,allAdvertisements.stream().toList());
-//        return ResponseEntity.ok(listByMaxPrice);
-//    }
 
     // todo: need to test this. should we use a set or a list?
-    public boolean bringAdvertisementToTop(String id) {
+    public synchronized boolean bringAdvertisementToTop(String id) {
 
         try {
             AdvertisementUtils.bringToTop(id, allAdvertisements);
@@ -95,7 +74,7 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
      * @return
      * @throws Exception
      */
-    public ResponseEntity<GenericAdvertisement> updateAdvertisement(
+    public synchronized ResponseEntity<GenericAdvertisement> updateAdvertisement(
             String id, GenericAdvertisement assetAdvertisement) throws Exception {
 
         GenericAdvertisement existingAssetAdvertisement = AdvertisementUtils.findById(id,allAdvertisements);
@@ -106,6 +85,10 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
         existingAssetAdvertisement.setContactPhoneNumber(assetAdvertisement.getContactPhoneNumber());
         existingAssetAdvertisement.setPrice(assetAdvertisement.getPrice());
         existingAssetAdvertisement.setId(assetAdvertisement.getId());
+        //remove the old advertisement by its id ( should be synched )
+        if(!deleteAdvertisement(id)){
+            throw new Exception("Failed to remove the old advertisement of id:"+id+", hence the update failed. aborting");
+        }
         allAdvertisements.add(existingAssetAdvertisement);
         return ResponseEntity.ok(existingAssetAdvertisement);
     }

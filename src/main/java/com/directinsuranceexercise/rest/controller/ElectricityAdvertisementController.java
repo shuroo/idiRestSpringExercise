@@ -33,7 +33,7 @@ public class ElectricityAdvertisementController extends AdvertisementController 
         }
         existingAssetAdvertisement.setCondition(electricityAdvertisement.getCondition());
         existingAssetAdvertisement.setElectricityType(electricityAdvertisement.getElectricityType());
-        allAdvertisements.add(existingAssetAdvertisement);
+        // no add or remove, this happened in the parent already
         return ResponseEntity.ok(existingAssetAdvertisement);
     }
 
