@@ -24,10 +24,10 @@ import java.util.List;
 public class ShowAssetsView extends VerticalLayout {
 
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
-    private final H1 titleLabel = new H1("Asset Advertisements");
+    private final String titleLabel = "Asset Advertisements";
 
     public ShowAssetsView(){
-        add(titleLabel);
+        add(ViewsUtils.addTopLabel(titleLabel));
         add(ViewsUtils.buildTopMenu());
         add(ViewsUtils.buildAssetGrid(allAds));
     }

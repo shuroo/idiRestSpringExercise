@@ -16,6 +16,7 @@ import com.vaadin.flow.router.Route;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Route(value = "/filterByCategory") // , layout = MainLayout.class
@@ -52,13 +53,12 @@ public class FilterByCategoryView extends VerticalLayout {
 
         // Create the grid and add to the view
 
-        H2 titleLabel = new H2(pageLabelText);
         grid = ViewsUtils.buildGenericGrid(allAds);
 
-        add(titleLabel);
+        add(ViewsUtils.addTopLabel(pageLabelText));
         add(ViewsUtils.buildTopMenu());
-        add(new HorizontalLayout(categoryDropdown,
-                new VerticalLayout(new Label(pageLabelText),filterButton)), grid);
+        add(ViewsUtils.createFilterByComponent( pageLabelText,
+                filterButton,categoryDropdown), grid);
     }
 }
 

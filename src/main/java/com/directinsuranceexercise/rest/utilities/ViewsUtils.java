@@ -9,6 +9,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -54,6 +55,14 @@ public class ViewsUtils {
         return grid;
     }
 
+    /**
+     * Method for creating a top label for each page
+     * @param lblText
+     * @return H2
+     */
+    public static H2 addTopLabel(String lblText){
+        return new H2(lblText);
+    }
 
     public static Grid buildAssetGrid(List<GenericAdvertisement> allAds) {
         List<GenericAdvertisement> assetAds = AdvertisementUtils.filterByCategory(Constants.assetCategory,allAds);
@@ -95,15 +104,12 @@ public class ViewsUtils {
     }
 
     public static HorizontalLayout createFilterByComponent(String currentPageLbl,
-                                                    Button nxtPageBtn,
                                                     Button  filterButton,
-                                                    Optional<TextField> maybeMaxPriceField){
+                                                   Component criteriaField){
 
-        nxtPageBtn.getStyle().set("background-color", "blue");
-        nxtPageBtn.getStyle().set("color", "black");
-        VerticalLayout filterWrapper = new VerticalLayout(new Label(currentPageLbl), filterButton,nxtPageBtn);
-        Component maxPriceField = maybeMaxPriceField.orElse(null);
-        return new HorizontalLayout( maxPriceField,filterWrapper);
+        VerticalLayout filterWrapper = new VerticalLayout(new Label(currentPageLbl), filterButton);
+        HorizontalLayout layout = new HorizontalLayout(criteriaField,filterWrapper);
+        return layout;
     }
 
     public static ComboBox<String> getCategoryOptions(){

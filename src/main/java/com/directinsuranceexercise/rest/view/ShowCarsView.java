@@ -23,10 +23,10 @@ import java.util.List;
 public class ShowCarsView extends VerticalLayout {
 
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
-    private final H1 titleLabel = new H1("Car Advertisements");
+    private final String titleLabel = "Car Advertisements";
 
     public ShowCarsView(){
-        add(titleLabel);
+        add(ViewsUtils.addTopLabel(titleLabel));
         add(ViewsUtils.buildTopMenu());
         add(ViewsUtils.buildCarGrid(allAds));
     }

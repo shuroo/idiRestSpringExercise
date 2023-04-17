@@ -219,6 +219,7 @@ public class MainView extends VerticalLayout {
                 String url = baseUrl+urlPrefix+"/"+urlSuffix;
                 ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
 
+                System.out.println("*****"+url+","+method);
                 // Reload the grid with the updated data
                 allAds = AdManager.getInstance().getAdvertisements().stream().toList();
                 grid.setItems(allAds);

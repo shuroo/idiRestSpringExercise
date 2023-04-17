@@ -24,10 +24,10 @@ import java.util.List;
 public class ShowElectronicsView extends VerticalLayout {
 
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
-    private final H1 titleLabel = new H1("Electronic Advertisements");
+    private final String titleLabel = "Electronic Advertisements";
 
     public ShowElectronicsView(){
-        add(titleLabel);
+        add(ViewsUtils.addTopLabel(titleLabel));
         add(ViewsUtils.buildTopMenu());
         add(ViewsUtils.buildElectronicsGrid(allAds));
     }

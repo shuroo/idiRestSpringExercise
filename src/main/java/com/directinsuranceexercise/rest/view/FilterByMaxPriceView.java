@@ -4,7 +4,6 @@ import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.ViewsUtils;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -28,6 +27,8 @@ import java.util.logging.Logger;
         //todo: allow numbers only!
         private TextField maxPriceField;
         private Button filterButton;
+
+        private final String titleLabel = "Filter By Max Price";
 
         private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
 
@@ -69,13 +70,11 @@ import java.util.logging.Logger;
             // Create the grid and add to the view
             grid = ViewsUtils.buildGenericGrid(allAds);
             //todo: handle strings
-            Button goToFilterByCategoryButton = new Button("GoTo FilterByCategory");
-            goToFilterByCategoryButton.addClickListener(event -> UI.getCurrent().navigate(FilterByCategoryView.class));
-            add(ViewsUtils.createFilterByComponent( "Filter by Max Price",
-                    goToFilterByCategoryButton,
+            add(ViewsUtils.addTopLabel(titleLabel));
+            add(ViewsUtils.buildTopMenu());
+            add(ViewsUtils.createFilterByComponent( titleLabel,
                     filterButton,
-                    Optional.ofNullable(maxPriceField)), grid);
-            ViewsUtils.setBorder(this);
+                    maxPriceField), grid);
         }
     }
 
