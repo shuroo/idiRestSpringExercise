@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/electricityAdvertisements", produces = "application/json")
-public class ElectricityAdvertisementController extends AdvertisementController<ElectricityAdvertisement> {
+public class ElectricityAdvertisementController extends AdvertisementController implements CRUDAdvertisementInterface {
 
 
     @RequestMapping(value = "/create",

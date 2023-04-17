@@ -87,33 +87,41 @@ public class MainView extends VerticalLayout {
                 return HttpMethod.POST;
 
     }
-    private String buildUrlPrefixByCategoryAndHttpMethod(String httpMethod,JSONObject requestBody) throws JSONException{
-        String urlPrefix = "";
+
+    private String buildSuffixByMethod(String httpMethod,JSONObject requestBody) throws JSONException {
 
         // todo: to support update we need something like: assetAdvertisements/{id}. can we switch all to generic operations?
-        if(httpMethod.equals(jumpOperation) || httpMethod.equals(deleteOperation)){
+        if(!httpMethod.equals(createOperation)){
             String id = requestBody.getString("id");
-            return "assetAdvertisements/"+id;
+            return id;
         }
+
+        return "";
+    }
+    private String buildUrlPrefixByCategory() throws JSONException{
+        String urlPrefix = "";
+
         String category = categories.getValue();
         switch (category) {
             case Constants.genericCategory:
                 throw new JSONException("Invalid category, please select one and try again");
             case Constants.assetCategory:
-                urlPrefix = "assetAdvertisements/";
+                urlPrefix = "assetAdvertisements";
                 return urlPrefix;
             case Constants.carCategory:
-                urlPrefix = "carAdvertisements/";
+                urlPrefix = "carAdvertisements";
                 return urlPrefix;
             case Constants.electricityCategory:
-                urlPrefix = "electricityAdvertisements/";
+                urlPrefix = "electricityAdvertisements";
                 return urlPrefix;
+
+                // other categories can be added here in the future.
         }
 
         return urlPrefix;
     }
 
-    private boolean validateFullJsonStructure(JSONObject requestBody, String httpMethod) throws JSONException {
+    private boolean validateFullJsonStructure(JSONObject requestBody) throws JSONException {
         requestBody.getDouble("price");
         requestBody.getString("contactPhoneNumber");
         requestBody.getString("contactName");
@@ -157,8 +165,8 @@ public class MainView extends VerticalLayout {
             requestBody.getString("id");
         }
         // For 'Create' or 'Edit', verify that we have a full json structure with all the Ad required fields
-        if(httpMethod.equals(createOperation) || httpMethod.equals(createOperation)){
-            return validateFullJsonStructure(requestBody,httpMethod);
+        if(httpMethod.equals(createOperation) || httpMethod.equals(updateOperation)){
+            return validateFullJsonStructure(requestBody);
         }
 
         return true;
@@ -190,36 +198,22 @@ public class MainView extends VerticalLayout {
                 HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
                 HttpMethod method = null;
-                String urlSuffix = operationBtn.getText().toLowerCase();
+                String urlSuffix = null;
                 String urlPrefix = null;
                 //todo: change requestBody param name
 
                 String httpMethodString = operationBtn.getText();
                 validateRequest(requestBody,httpMethodString);
 
-//                //todo: seperate this to methods:
-//                switch(httpMethodString){
-//                    case createOperation:
-//                        method = HttpMethod.POST;
-//                    case updateOperation:
-//                        method = HttpMethod.PUT;
-//                        String id = requestBody.getString("id");
-//                        urlSuffix = urlSuffix+"/"+id;
-//                    case deleteOperation:
-//                        method = HttpMethod.DELETE;
-//                        urlPrefix = "/advertisements/"+id;
-//                    case jumpOperation:
-//                        method = HttpMethod.GET;
-//                        urlPrefix = "advertisements/"+id; // <- todo: this is redundant
-//                }
-
-                urlPrefix = buildUrlPrefixByCategoryAndHttpMethod(httpMethodString,requestBody);
+                urlPrefix = buildUrlPrefixByCategory();
+                urlSuffix = buildSuffixByMethod(httpMethodString ,requestBody);
 
                 method = matchHttpMethod( httpMethodString);
                 String url = baseUrl+urlPrefix+"/"+urlSuffix;
-                ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
 
                 System.out.println("*****"+url+","+method);
+                ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
+
                 // Reload the grid with the updated data
                 allAds = AdManager.getInstance().getAdvertisements().stream().toList();
                 grid.setItems(allAds);

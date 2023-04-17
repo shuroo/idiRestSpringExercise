@@ -6,54 +6,57 @@ import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
 
+/**
+ * Just an abstract controller to implement a basic CRUD on the genericGrid, not to be accessed directly but to be inherited.
+ */
 @Component
 @RestController
-@RequestMapping(value = "/advertisements", produces = "application/json")
-public class AdvertisementController<T extends GenericAdvertisement> {
+abstract class AdvertisementController implements CRUDAdvertisementInterface {
+
+    private static final Logger logger = Logger.getLogger(GenericAdvertisement.class.getName());
 
     protected AdManager advertisementManager = AdManager.getInstance();
 
     protected ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisements();
+//
+//    public ConcurrentLinkedQueue<GenericAdvertisement> getAllAdvertisements() {
+//        return allAdvertisements;
+//    }
+//    @GetMapping("/all")
+//    public ResponseEntity<List<GenericAdvertisement>> getAll() {
+//        return ResponseEntity.ok(allAdvertisements.stream().toList());
+//    }
 
-    public ConcurrentLinkedQueue<GenericAdvertisement> getAllAdvertisements() {
-        return allAdvertisements;
-    }
-    @GetMapping("/all")
-    public ResponseEntity<List<GenericAdvertisement>> getAll() {
-        return ResponseEntity.ok(allAdvertisements.stream().toList());
-    }
+//    @GetMapping("/filterCategory/{category}")
+//    public ResponseEntity<List<GenericAdvertisement>> getByCategory( String category) {
+//
+//        List<GenericAdvertisement> allByCategory = AdvertisementUtils.filterByCategory(category,allAdvertisements.stream().toList());
+//        return ResponseEntity.ok(allByCategory);
+//    }
 
-    @GetMapping("/filterCategory/{category}")
-    public ResponseEntity<List<GenericAdvertisement>> getByCategory(@PathVariable("category") String category) {
-
-        List<GenericAdvertisement> allByCategory = AdvertisementUtils.filterByCategory(category,allAdvertisements.stream().toList());
-        return ResponseEntity.ok(allByCategory);
-    }
-
-    @GetMapping("/filterPrice/{price}")
-    public ResponseEntity<List<GenericAdvertisement>> getByMaxPrice(@PathVariable("price") Double maxPrice) {
-        List<GenericAdvertisement> listByMaxPrice = AdvertisementUtils.filterByMaxPrice(maxPrice,allAdvertisements.stream().toList());
-        return ResponseEntity.ok(listByMaxPrice);
-    }
+//    @GetMapping("/filterPrice/{price}")
+//    public ResponseEntity<List<GenericAdvertisement>> getByMaxPrice(@PathVariable("price") Double maxPrice) {
+//        List<GenericAdvertisement> listByMaxPrice = AdvertisementUtils.filterByMaxPrice(maxPrice,allAdvertisements.stream().toList());
+//        return ResponseEntity.ok(listByMaxPrice);
+//    }
 
     // todo: need to test this. should we use a set or a list?
-    @GetMapping("/bringToTop/{id}")
-    public ResponseEntity<List<GenericAdvertisement>> bringAdvertisementToTop(@PathVariable("id") String id) {
+    public boolean bringAdvertisementToTop(String id) {
 
-        AdvertisementUtils.bringToTop(id,allAdvertisements);
-        return ResponseEntity.ok(allAdvertisements.stream().toList());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<GenericAdvertisement> getAdvertisement(@PathVariable("id") String id) {
-
-        GenericAdvertisement ad = AdvertisementUtils.findById(id,allAdvertisements);
-        return ResponseEntity.ok().body(ad);
+        try {
+            AdvertisementUtils.bringToTop(id, allAdvertisements);
+        }catch (Exception e){
+            logger.warning("Failed to perform operation 'bringToTo'. Error:"+e.getMessage());
+            // Better to return status code when possible.
+            return false;
+        }
+        // for success -
+        return true;
     }
 
 
@@ -67,15 +70,16 @@ public class AdvertisementController<T extends GenericAdvertisement> {
 ////////////////////////////////////////////////////////////////////
 
 
-    protected ResponseEntity<T> createAdvertisement(String category, T advertisement) throws Exception {
+    public ResponseEntity createAdvertisement(String category, GenericAdvertisement advertisement) throws Exception {
         // Generate a new ID for the advertisement and add it to the list
         AdvertisementUtils.generateAndSetId(advertisement);
+        advertisement.setCategory(category);
 
         if (AdvertisementUtils.findById(advertisement.getId(),allAdvertisements) != null) {
             throw new Exception("The following ID already exists in the system. method is aborting.");
         }
-        allAdvertisements.add((T)advertisement);
-        return ResponseEntity.ok((T)advertisement);
+        allAdvertisements.add(advertisement);
+        return ResponseEntity.ok(advertisement);
 
     }
 
@@ -91,7 +95,7 @@ public class AdvertisementController<T extends GenericAdvertisement> {
      * @return
      * @throws Exception
      */
-    protected ResponseEntity<GenericAdvertisement> updateAdvertisement(
+    public ResponseEntity<GenericAdvertisement> updateAdvertisement(
             String id, GenericAdvertisement assetAdvertisement) throws Exception {
 
         GenericAdvertisement existingAssetAdvertisement = AdvertisementUtils.findById(id,allAdvertisements);
@@ -106,10 +110,15 @@ public class AdvertisementController<T extends GenericAdvertisement> {
         return ResponseEntity.ok(existingAssetAdvertisement);
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteAdvertisement(@PathVariable("id") String id) {
 
-        return allAdvertisements.removeIf(ad -> ad.getId().equals(id));
+    public boolean deleteAdvertisement(String id) {
+
+        try {
+            return allAdvertisements.removeIf(ad -> ad.getId().equals(id));
+        }catch (Exception e){
+            logger.warning("Failed to delete record, Exception detected with msg:"+e.getMessage());
+            return false;
+        }
     }
 
 

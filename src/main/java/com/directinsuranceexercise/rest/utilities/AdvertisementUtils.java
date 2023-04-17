@@ -57,6 +57,9 @@ public class AdvertisementUtils {
         return assetAds;
     }
 
+    public static String createErrorEditMsg(String category){
+        return "Failed to parse the given id as an "+category+". Make sure that the category matches the required advertisement type";
+    }
 
     public static List<CarAdvertisement> convertToCarAds(List<GenericAdvertisement> ads){
         List<CarAdvertisement> catAds = null;

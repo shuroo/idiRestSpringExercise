@@ -1,6 +1,5 @@
 package com.directinsuranceexercise.rest.controller;
 
-import com.directinsuranceexercise.rest.model.AssetAdvertisement;
 import com.directinsuranceexercise.rest.model.CarAdvertisement;
 import com.directinsuranceexercise.rest.utilities.Constants;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/carAdvertisements", produces = "application/json")
-public class CarAdvertisementController extends AdvertisementController<CarAdvertisement> {
+public class CarAdvertisementController extends AdvertisementController implements CRUDAdvertisementInterface {
 
     // todo: test carAdvertisements/create
     @RequestMapping(value = "/create",
@@ -19,8 +18,7 @@ public class CarAdvertisementController extends AdvertisementController<CarAdver
         return createAdvertisement(Constants.carCategory, carAdvertisement);
     }
 
-
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<CarAdvertisement> updateAdvertisement(@PathVariable("id") String id,
                                                                     @RequestBody CarAdvertisement carAdvertisement)
             throws Exception {
@@ -44,6 +42,33 @@ public class CarAdvertisementController extends AdvertisementController<CarAdver
         allAdvertisements.remove(carAdvertisement);
         allAdvertisements.add(existingCarAdvertisement);
         return ResponseEntity.ok(existingCarAdvertisement);
+    }
+
+
+    /**
+     * Jump Ad to top -
+     * This method was implemented just for the routes consistency,
+     * The implementation is exactly the same as in the parent.
+     * @param id - the Ad Id
+     * @return boolean
+     */
+    @GetMapping("/{id}")
+    @Override
+    public boolean  bringAdvertisementToTop(@PathVariable("id") String id) {
+        return super.bringAdvertisementToTop(id);
+    }
+
+    /**
+     * Delete Ad -
+     * This method was implemented just for the routes,
+     * This method was implemented just for the routes consistency,
+     * @param id - the Ad Id
+     * @return boolean
+     */
+    @DeleteMapping("/{id}")
+    @Override
+    public boolean deleteAdvertisement(@PathVariable("id") String id) {
+        return super.deleteAdvertisement(id);
     }
 
 }

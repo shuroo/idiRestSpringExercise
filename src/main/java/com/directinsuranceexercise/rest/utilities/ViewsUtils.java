@@ -5,6 +5,7 @@ import com.directinsuranceexercise.rest.model.CarAdvertisement;
 import com.directinsuranceexercise.rest.model.ElectricityAdvertisement;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.view.*;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -14,11 +15,8 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.textfield.TextField;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public class ViewsUtils {
