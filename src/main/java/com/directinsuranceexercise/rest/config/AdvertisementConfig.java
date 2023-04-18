@@ -66,7 +66,11 @@ public class AdvertisementConfig {
     @Value("${electronicsAd.electricityType}")
     private String electricityType;
 
-    // Create a sample asset ad, based on the configuration file definitions:
+    /**
+     * Method for creation of an asset-advertisement on startup
+     * Create a sample asset ad, based on the configuration file definitions
+     * @return AssetAdvertisement - the asset created
+     */
     public AssetAdvertisement getSampleAssetAdvertisement() {
         AssetAdvertisement ad = new AssetAdvertisement();
         AdvertisementUtils.generateAndSetId(ad);
@@ -81,7 +85,11 @@ public class AdvertisementConfig {
         return ad;
     }
 
-    // Create a sample car ad, based on the configuration file definitions:
+    /**
+     * Method for creation of a car-advertisement on startup
+     * Creates a sample car ad, based on the configuration file definitions:
+     * @return CarAdvertisement object - the car-ad created
+     */
     public CarAdvertisement getSampleCarAdvertisement() {
         CarAdvertisement ad = new CarAdvertisement();
         AdvertisementUtils.generateAndSetId(ad);
@@ -97,7 +105,13 @@ public class AdvertisementConfig {
         return ad;
     }
 
-    // Create a sample electronics ad, based on the configuration file definitions:
+    //
+
+    /**
+     * Method for creation of a electricity-advertisement on startup
+     * Create a sample electronics ad, based on the configuration file definitions
+     * @return ElectricityAdvertisement object - the electricity-ad created
+     */
     public ElectricityAdvertisement getSampleElectronicsAdvertisement() {
         ElectricityAdvertisement ad = new ElectricityAdvertisement();
         AdvertisementUtils.generateAndSetId(ad);
