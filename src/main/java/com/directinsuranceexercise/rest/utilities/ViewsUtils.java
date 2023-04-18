@@ -82,7 +82,7 @@ public class ViewsUtils {
         Grid<CarAdvertisement> grid = new Grid<>();
         grid.setItems(AdvertisementUtils.convertToCarAds(carAds));
         grid.addColumn(CarAdvertisement::getId).setHeader("ID").setFlexGrow(1).setWidth("30%");
-        grid.addColumn(CarAdvertisement::getManufacturer).setHeader("Manifecturer");
+        grid.addColumn(CarAdvertisement::getManufacturer).setHeader("Manufecturer");
         grid.addColumn(CarAdvertisement::getPrice).setHeader("Price");
         grid.addColumn(CarAdvertisement::getModel).setHeader("Model");
         grid.addColumn(CarAdvertisement::getYear).setHeader("Year");

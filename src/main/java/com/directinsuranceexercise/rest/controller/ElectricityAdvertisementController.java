@@ -8,10 +8,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for managing electricity advertisements.
+ * @author shirirave
+ * @since 04-18-2023
+ */
 @RestController
 @RequestMapping(value = "/electricityAdvertisements", produces = "application/json")
 public class ElectricityAdvertisementController extends AdvertisementController implements CRUDAdvertisementInterface {
 
+    /**
+     * HTTP endpoint for creating a new electricity advertisement.
+     * @param electricityAdvertisement The electricity advertisement to be created.
+     * @return A ResponseEntity containing the created advertisement and a HTTP status code.
+     * @throws Exception If there is an error during the creation process.
+     */
 
     @RequestMapping(value = "/create",
             method = RequestMethod.POST)
@@ -19,6 +30,13 @@ public class ElectricityAdvertisementController extends AdvertisementController 
         return createAdvertisement(Constants.electricityCategory, electricityAdvertisement);
     }
 
+    /**
+     * HTTP endpoint for updating an existing electricity advertisement.
+     * @param id The ID of the advertisement to be updated.
+     * @param electricityAdvertisement The updated electricity advertisement.
+     * @return A ResponseEntity containing the updated advertisement and a HTTP status code.
+     * @throws Exception If there is an error during the update process.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<ElectricityAdvertisement> updateAdvertisement(@PathVariable("id") String id,
                                                                         @RequestBody ElectricityAdvertisement electricityAdvertisement)
@@ -49,6 +67,13 @@ public class ElectricityAdvertisementController extends AdvertisementController 
      * @param id - the Ad Id
      * @return boolean
      */
+
+    /**
+     * HTTP endpoint for bringing an advertisement to the top of the list.
+     * This method was implemented just for the sake of route consistency, and its implementation is the same as in the parent class.
+     * @param id The ID of the advertisement to be moved to the top.
+     * @return true if the advertisement was moved to the top successfully, false otherwise.
+     */
     @GetMapping("/{id}")
     @Override
     public boolean bringAdvertisementToTop(@PathVariable("id") String id) {
@@ -63,10 +88,20 @@ public class ElectricityAdvertisementController extends AdvertisementController 
      * @param id - the Ad Id
      * @return boolean
      */
-    @DeleteMapping("/{id}")
-    @Override
-    public boolean deleteAdvertisement(@PathVariable("id") String id) {
-        return super.deleteAdvertisement(id);
-    }
+
+
+
+    /**
+     * This method deletes an ElectricityAdvertisement.
+     *
+     * @param id - the ID of the ElectricityAdvertisement to delete
+     * @return boolean - true if the ElectricityAdvertisement was successfully deleted, false otherwise
+     */
+
+     @DeleteMapping("/{id}")
+        @Override
+        public boolean deleteAdvertisement(@PathVariable("id") String id) {
+            return super.deleteAdvertisement(id);
+        }
 
 }
