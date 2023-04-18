@@ -25,7 +25,6 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
 
     protected ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements = advertisementManager.getAdvertisements();
 
-    // todo: need to test this. should we use a set or a list?
     public synchronized boolean bringAdvertisementToTop(String id) {
 
         try {
@@ -44,7 +43,8 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
      * Method for before creation of a new Advertisement: make sure the id does not already exists in the system,
      * generate a new id
      *
-     * @param ad
+     * @param advertisement
+     * @param category
      * @return
      */
 
@@ -62,8 +62,6 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
 
     }
 
-
-    // todo: inherit and split the updates.
 
     /**
      * Generic method for ad update - cannot be accessed directly (-only for inheritance)

@@ -4,7 +4,6 @@ import com.directinsuranceexercise.rest.utilities.Constants;
 
 public class ElectricityAdvertisement extends GenericAdvertisement {
 
-    // todo: will it work? test the categories!
     protected String category = Constants.electricityCategory;
     protected String condition;
     protected String electricityType;

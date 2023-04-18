@@ -6,6 +6,7 @@ import com.directinsuranceexercise.rest.utilities.Constants;
 import com.directinsuranceexercise.rest.utilities.ViewsUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
@@ -40,8 +41,10 @@ public class MainView extends VerticalLayout {
     private final String deleteOperation = "DELETE";
     private final String jumpToTopOperation = "JumpToTop";
 
-    private final static String invalidCategoryMsg = "Category is invalid, Please choose a category";
-    private final static String jsonInputRequredMsg = "JSON Input is Required";
+    private static final String invalidCategoryMsg = "Category is invalid, Please choose a category";
+    private static final String jsonInputRequredMsg = "JSON Input is Required";
+
+    private static final String deleteConfirmationMsg = "Are you sure you want to delete this advertisement?";
     private final TextArea jsonTextArea;
     private final Button createButton;
     private final Button updateButton;
@@ -61,7 +64,6 @@ public class MainView extends VerticalLayout {
     }
 
     private void assetAdvertisementAsJson(JSONObject jsonAd, AssetAdvertisement ad) throws JSONException {
-        // todo: put in constants!!
         jsonAd.put(Constants.numberOfRooms, ad.getNumberOfRooms());
         jsonAd.put(Constants.assetAdType, ad.getAssetAdType());
         jsonAd.put(Constants.assetSize, ad.getAssetSize());
@@ -213,7 +215,6 @@ public class MainView extends VerticalLayout {
      * @throws JSONException
      */
 
-    //todo: add all the below to the constants:
     private boolean validateRequest(JSONObject requestBody, String httpMethod) throws JSONException {
         // for any request except creation, we should verify the id field exists.
         if (!httpMethod.equals(createOperation)) {
@@ -240,7 +241,6 @@ public class MainView extends VerticalLayout {
         try {
             requestBody = new JSONObject(tokener);
 
-
             // Send the request
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -251,7 +251,6 @@ public class MainView extends VerticalLayout {
             HttpMethod method = null;
             String urlSuffix = null;
             String urlPrefix = null;
-            //todo: change requestBody param name
 
             String httpMethodString = operationBtn.getText();
             validateRequest(requestBody, httpMethodString);

@@ -9,11 +9,13 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ClickableRenderer;
 
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class ViewsUtils {
      *
      * @return MenuBar
      */
+
     public static MenuBar buildTopMenu() {
 
         MenuBar menuBar = new MenuBar();

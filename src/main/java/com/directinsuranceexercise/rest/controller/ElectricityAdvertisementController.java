@@ -57,8 +57,8 @@ public class ElectricityAdvertisementController extends AdvertisementController 
 
     /**
      * Delete Ad -
-     * This method was implemented just for the routes,
      * This method was implemented just for the routes consistency,
+     * since its implementation already exists in its parent
      *
      * @param id - the Ad Id
      * @return boolean

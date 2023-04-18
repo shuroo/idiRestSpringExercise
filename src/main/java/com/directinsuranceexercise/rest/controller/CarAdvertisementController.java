@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/carAdvertisements", produces = "application/json")
 public class CarAdvertisementController extends AdvertisementController implements CRUDAdvertisementInterface {
 
-    // todo: test carAdvertisements/create
     @RequestMapping(value = "/create",
             method = RequestMethod.POST)
     public ResponseEntity<CarAdvertisement> createCarAdvertisement(@RequestBody CarAdvertisement carAdvertisement) throws Exception {

@@ -73,7 +73,6 @@ public class FilterByMaxPriceView extends VerticalLayout {
 
         // Create the grid and add to the view
         grid = ViewsUtils.buildGenericGrid(allAds);
-        //todo: handle strings
         add(ViewsUtils.addTopLabel(titleLabel));
         add(ViewsUtils.buildTopMenu());
         add(ViewsUtils.createFilterByComponent(titleLabel,
