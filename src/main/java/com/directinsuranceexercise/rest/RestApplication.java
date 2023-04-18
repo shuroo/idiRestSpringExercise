@@ -34,6 +34,9 @@ public class RestApplication implements AppShellConfigurator {
 
 	// Other routes and classes
 
+	/***
+	 * Method to build a sample advertisements for each given type will be called upon server start and post construct.
+	 */
 	@PostConstruct
 	public void init() {
 		AdManager adManager = AdManager.getInstance();

@@ -39,6 +39,7 @@ public class CarAdvertisementController extends AdvertisementController implemen
         existingCarAdvertisement.setModel(carAdvertisement.getModel());
         existingCarAdvertisement.setYear(carAdvertisement.getYear());
         // no add or remove, this happened in the parent already
+        allAdvertisements.add(existingCarAdvertisement);
         return ResponseEntity.ok(existingCarAdvertisement);
     }
 

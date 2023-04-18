@@ -71,7 +71,7 @@ public class MainView extends VerticalLayout {
     private void carAdvertisementAsJson(JSONObject jsonAd, CarAdvertisement ad) throws JSONException {
         jsonAd.put("color",ad.getColor());
         jsonAd.put("model",ad.getPrice());
-        jsonAd.put("manifacturer",ad.getManufacturer());
+        jsonAd.put("manufacturer",ad.getManufacturer());
         jsonAd.put("year",ad.getYear());
         jsonAd.put("km",ad.getKm());
     }
@@ -183,7 +183,7 @@ public class MainView extends VerticalLayout {
             case Constants.carCategory:
                 requestBody.getString("color");
                 requestBody.getString("model");
-                requestBody.getString("manifacturer");
+                requestBody.getString("manufacturer");
                 requestBody.getInt("year");
                 requestBody.getInt("km");
                 return true;
