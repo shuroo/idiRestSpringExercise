@@ -228,6 +228,11 @@ public class MainView extends VerticalLayout {
         return true;
     }
 
+    private String buildUrl(String urlPrefix,String urlSuffix){
+        return Constants.baseUrl + urlPrefix + "/" + urlSuffix;
+    }
+
+
     /**
      * Perform CRUD operations as needed
      */
@@ -259,7 +264,7 @@ public class MainView extends VerticalLayout {
             urlSuffix = buildSuffixByMethod(httpMethodString, requestBody);
 
             method = matchHttpMethod(httpMethodString);
-            String url = Constants.baseUrl + urlPrefix + "/" + urlSuffix;
+            String url = buildUrl(urlPrefix,urlSuffix);
 
             logger.info("Sending request of type:" + httpMethodString + " to url:" + url);
             ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
