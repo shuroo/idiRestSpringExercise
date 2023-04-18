@@ -51,7 +51,7 @@ public class AdvertisementConfig {
     @Value("${carAd.color}")
     private String carColor;
 
-    @Value("{carAd.manifacturer}")
+    @Value("${carAd.manifacturer}")
     private String manifacturer;
 
     @Value("${carAd.carKm}")

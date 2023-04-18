@@ -55,10 +55,10 @@ public class MainView extends VerticalLayout {
     private final JsonBean bean = new JsonBean();
 
     private void genericAdvertisementAsJson(JSONObject jsonAd,GenericAdvertisement ad) throws JSONException {
-                jsonAd.put("id",ad.getId());
-                jsonAd.put("price",ad.getPrice());
-                jsonAd.put("contactName",ad.getContactName());
-                jsonAd.put("contactPhoneNumber",ad.getContactPhoneNumber());
+        jsonAd.put("id",ad.getId());
+        jsonAd.put("price",ad.getPrice());
+        jsonAd.put("contactName",ad.getContactName());
+        jsonAd.put("contactPhoneNumber",ad.getContactPhoneNumber());
     }
 
     private void assetAdvertisementAsJson(JSONObject jsonAd, AssetAdvertisement ad) throws JSONException {
@@ -113,25 +113,24 @@ public class MainView extends VerticalLayout {
 
             // set the JSON string as the text of the text area
             jsonTextArea.setValue(jsonAd.toString());
-            String currentCategory = ad.getCategory();
-            categories.setValue(currentCategory);
+            categories.setValue(ad.getCategory());
         });
     }
 
     private HttpMethod matchHttpMethod(String httpMethodString){
 
-                switch(httpMethodString) {
-                    case createOperation:
-                        return HttpMethod.POST;
-                    case updateOperation:
-                        return HttpMethod.PUT;
-                    case deleteOperation:
-                        return HttpMethod.DELETE;
-                    case jumpOperation:
-                        return HttpMethod.GET;
-                }
-
+        switch(httpMethodString) {
+            case createOperation:
                 return HttpMethod.POST;
+            case updateOperation:
+                return HttpMethod.PUT;
+            case deleteOperation:
+                return HttpMethod.DELETE;
+            case jumpOperation:
+                return HttpMethod.GET;
+        }
+
+        return HttpMethod.POST;
 
     }
 
@@ -162,7 +161,7 @@ public class MainView extends VerticalLayout {
                 urlPrefix = "electricityAdvertisements";
                 return urlPrefix;
 
-                // other categories can be added here in the future.
+            // other categories can be added here in the future.
         }
 
         return urlPrefix;
@@ -237,42 +236,42 @@ public class MainView extends VerticalLayout {
 
             // todo: one can shorten it if the 'create' was generic!
 
-                // Send the request
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                String category = categories.getValue();
-                requestBody.put("category",category);
-                HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
+            // Send the request
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            String category = categories.getValue();
+            requestBody.put("category",category);
+            HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
-                HttpMethod method = null;
-                String urlSuffix = null;
-                String urlPrefix = null;
-                //todo: change requestBody param name
+            HttpMethod method = null;
+            String urlSuffix = null;
+            String urlPrefix = null;
+            //todo: change requestBody param name
 
-                String httpMethodString = operationBtn.getText();
-                validateRequest(requestBody,httpMethodString);
+            String httpMethodString = operationBtn.getText();
+            validateRequest(requestBody,httpMethodString);
 
-                urlPrefix = buildUrlPrefixByCategory();
-                urlSuffix = buildSuffixByMethod(httpMethodString ,requestBody);
+            urlPrefix = buildUrlPrefixByCategory();
+            urlSuffix = buildSuffixByMethod(httpMethodString ,requestBody);
 
-                method = matchHttpMethod( httpMethodString);
-                String url = baseUrl+urlPrefix+"/"+urlSuffix;
+            method = matchHttpMethod( httpMethodString);
+            String url = baseUrl+urlPrefix+"/"+urlSuffix;
 
-                logger.info("Sending request of type:"+httpMethodString+" to url:"+url);
-                ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
+            logger.info("Sending request of type:"+httpMethodString+" to url:"+url);
+            ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
 
-                // Reload the grid with the updated data
-                allAds = AdManager.getInstance().getAdvertisements();
-                grid.setItems(allAds);
+            // Reload the grid with the updated data
+            allAds = AdManager.getInstance().getAdvertisements();
+            grid.setItems(allAds);
 
-                // Check the response status code
-                if (response.getStatusCode() == HttpStatus.OK) {
-                    Notification.show("Successfully sending http request:"+method+". Response body was:"+response.getBody(), 3000,
-                            Notification.Position.BOTTOM_CENTER);
-                } else {
-                    Notification.show("Error sending http request:"+method+".Detected status:"+response.getStatusCode()+". aborting.", 3000,
-                            Notification.Position.BOTTOM_CENTER);
-                }
+            // Check the response status code
+            if (response.getStatusCode() == HttpStatus.OK) {
+                Notification.show("Successfully sending http request:"+method+". Response body was:"+response.getBody(), 3000,
+                        Notification.Position.BOTTOM_CENTER);
+            } else {
+                Notification.show("Error sending http request:"+method+".Detected status:"+response.getStatusCode()+". aborting.", 3000,
+                        Notification.Position.BOTTOM_CENTER);
+            }
 
 
 
@@ -304,7 +303,7 @@ public class MainView extends VerticalLayout {
         jumpToTop = new Button(jumpOperation);
 
         createButton.addClickListener(event ->
-            performCRUD(event.getSource()));
+                performCRUD(event.getSource()));
         updateButton.addClickListener(event -> performCRUD(event.getSource()));
         deleteButton.addClickListener(event -> performCRUD(event.getSource()));
         jumpToTop.addClickListener(event -> performCRUD(event.getSource()));

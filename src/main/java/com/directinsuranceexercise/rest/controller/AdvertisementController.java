@@ -85,11 +85,13 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
         existingAssetAdvertisement.setContactPhoneNumber(assetAdvertisement.getContactPhoneNumber());
         existingAssetAdvertisement.setPrice(assetAdvertisement.getPrice());
         existingAssetAdvertisement.setId(assetAdvertisement.getId());
-        //remove the old advertisement by its id ( should be synched )
+        //remove the old advertisement by its id ( should be synced )
         if(!deleteAdvertisement(id)){
-            throw new Exception("Failed to remove the old advertisement of id:"+id+", hence the update failed. aborting");
+            logger.warning("Failed to remove the old advertisement of id:"+id+", hence the update failed. aborting");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        allAdvertisements.add(existingAssetAdvertisement);
+        System.out.println("Creating a new Entity!!"+existingAssetAdvertisement.getContactPhoneNumber());
+        createAdvertisement(existingAssetAdvertisement.getCategory(),existingAssetAdvertisement);
         return ResponseEntity.ok(existingAssetAdvertisement);
     }
 

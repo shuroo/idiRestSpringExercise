@@ -101,12 +101,15 @@ public class AdvertisementUtils {
 
     public static GenericAdvertisement findById(String id, ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements){
         GenericAdvertisement foundAd = allAdvertisements.stream()
-                .filter(ad -> ad.getId().equals(id))
+                .filter(ad -> {
+                    System.out.println("^^^^ current id:"+id+",matched id:"+ad.getId());
+                    return ad.getId().equals(id);
+                })
                 .findFirst()
                 .orElse(null);
         // May be null. return the result.
         if(foundAd == null){
-            logger.info("ID:"+id+" in method 'findById' was not found. returning null.");
+            logger.warning("ID:"+id+" in method 'findById' was not found. returning null.");
         }
         return foundAd;
     }
