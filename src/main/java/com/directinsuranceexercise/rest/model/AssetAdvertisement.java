@@ -2,11 +2,11 @@ package com.directinsuranceexercise.rest.model;
 
 import com.directinsuranceexercise.rest.utilities.Constants;
 
-public class AssetAdvertisement extends GenericAdvertisement{
+public class AssetAdvertisement extends GenericAdvertisement {
 
     protected String category = Constants.assetCategory;
     protected Integer assetSize;
-    protected Integer numberOfRooms ;
+    protected Integer numberOfRooms;
     protected String assetAdType;
 
     public String getAssetAdType() {
@@ -33,9 +33,11 @@ public class AssetAdvertisement extends GenericAdvertisement{
         this.numberOfRooms = numberOfRooms;
     }
 
-    public AssetAdvertisement(){}
-    public AssetAdvertisement(Double price,  String contactName, String contactPhone,int numberOfRooms, int assetSize){
-        super(  price,   contactName, contactPhone);
+    public AssetAdvertisement() {
+    }
+
+    public AssetAdvertisement(Double price, String contactName, String contactPhone, int numberOfRooms, int assetSize) {
+        super(price, contactName, contactPhone);
         this.numberOfRooms = numberOfRooms;
         this.assetSize = assetSize;
     }

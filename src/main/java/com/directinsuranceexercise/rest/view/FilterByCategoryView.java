@@ -36,13 +36,12 @@ public class FilterByCategoryView extends VerticalLayout {
         } else {
             List<GenericAdvertisement> filteredAds = AdvertisementUtils.filterByCategory(category, allAds);
             grid.setItems(filteredAds);
-          }
         }
-
+    }
 
 
     public FilterByCategoryView(RestTemplate restTemplate) {
-         this.restTemplate = restTemplate;
+        this.restTemplate = restTemplate;
 
 
         // Initialize dropdown list and filter button
@@ -55,8 +54,8 @@ public class FilterByCategoryView extends VerticalLayout {
 
         add(ViewsUtils.addTopLabel(pageLabelText));
         add(ViewsUtils.buildTopMenu());
-        add(ViewsUtils.createFilterByComponent( pageLabelText,
-                filterButton,categoryDropdown), grid);
+        add(ViewsUtils.createFilterByComponent(pageLabelText,
+                filterButton, categoryDropdown), grid);
     }
 }
 

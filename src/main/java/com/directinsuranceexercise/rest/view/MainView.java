@@ -22,7 +22,6 @@ import org.json.JSONTokener;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
@@ -54,47 +53,47 @@ public class MainView extends VerticalLayout {
     private final Binder<JsonBean> binder = new Binder<>(JsonBean.class);
     private final JsonBean bean = new JsonBean();
 
-    private void genericAdvertisementAsJson(JSONObject jsonAd,GenericAdvertisement ad) throws JSONException {
-        jsonAd.put(Constants.id,ad.getId());
-        jsonAd.put(Constants.price,ad.getPrice());
-        jsonAd.put(Constants.contactName,ad.getContactName());
-        jsonAd.put(Constants.contactPhoneNumber,ad.getContactPhoneNumber());
+    private void genericAdvertisementAsJson(JSONObject jsonAd, GenericAdvertisement ad) throws JSONException {
+        jsonAd.put(Constants.id, ad.getId());
+        jsonAd.put(Constants.price, ad.getPrice());
+        jsonAd.put(Constants.contactName, ad.getContactName());
+        jsonAd.put(Constants.contactPhoneNumber, ad.getContactPhoneNumber());
     }
 
     private void assetAdvertisementAsJson(JSONObject jsonAd, AssetAdvertisement ad) throws JSONException {
         // todo: put in constants!!
-        jsonAd.put(Constants.numberOfRooms,ad.getNumberOfRooms());
-        jsonAd.put(Constants.assetAdType,ad.getAssetAdType());
-        jsonAd.put(Constants.assetSize,ad.getAssetSize());
+        jsonAd.put(Constants.numberOfRooms, ad.getNumberOfRooms());
+        jsonAd.put(Constants.assetAdType, ad.getAssetAdType());
+        jsonAd.put(Constants.assetSize, ad.getAssetSize());
     }
 
     private void carAdvertisementAsJson(JSONObject jsonAd, CarAdvertisement ad) throws JSONException {
         jsonAd.put(Constants.color, ad.getColor());
         jsonAd.put(Constants.model, ad.getPrice());
         jsonAd.put(Constants.manufacturer, ad.getManufacturer());
-        jsonAd.put(Constants.year,ad.getYear());
-        jsonAd.put(Constants.km,ad.getKm());
+        jsonAd.put(Constants.year, ad.getYear());
+        jsonAd.put(Constants.km, ad.getKm());
     }
 
     private void electronicsAdvertisementAsJson(JSONObject jsonAd, ElectricityAdvertisement ad) throws JSONException {
 
-        jsonAd.put(Constants.condition,ad.getCondition());
-        jsonAd.put(Constants.electricityType,ad.getElectricityType());
+        jsonAd.put(Constants.condition, ad.getCondition());
+        jsonAd.put(Constants.electricityType, ad.getElectricityType());
     }
 
-    private JSONObject buildAdvertisementAsJson(GenericAdvertisement ad, GenericAdvertisement extendedAd){
+    private JSONObject buildAdvertisementAsJson(GenericAdvertisement ad, GenericAdvertisement extendedAd) {
         JSONObject jsonAd = new JSONObject();
         String adCategory = ad.getCategory();
         try {
-            genericAdvertisementAsJson(jsonAd,ad);
-            if(adCategory.equals(Constants.assetCategory)){
-                assetAdvertisementAsJson(jsonAd,(AssetAdvertisement) extendedAd);
+            genericAdvertisementAsJson(jsonAd, ad);
+            if (adCategory.equals(Constants.assetCategory)) {
+                assetAdvertisementAsJson(jsonAd, (AssetAdvertisement) extendedAd);
 
-            } else if(adCategory.equals(Constants.carCategory)){
-                carAdvertisementAsJson(jsonAd,(CarAdvertisement) extendedAd);
+            } else if (adCategory.equals(Constants.carCategory)) {
+                carAdvertisementAsJson(jsonAd, (CarAdvertisement) extendedAd);
 
-            }else if(adCategory.equals(Constants.electricityCategory)){
-                electronicsAdvertisementAsJson(jsonAd,(ElectricityAdvertisement) extendedAd);
+            } else if (adCategory.equals(Constants.electricityCategory)) {
+                electronicsAdvertisementAsJson(jsonAd, (ElectricityAdvertisement) extendedAd);
 
             }
 
@@ -103,13 +102,14 @@ public class MainView extends VerticalLayout {
         }
         return jsonAd;
     }
-    private void setOnClickHandler(Grid<GenericAdvertisement> grid){
+
+    private void setOnClickHandler(Grid<GenericAdvertisement> grid) {
         grid.addItemClickListener(event -> {
             // get the selected row's data as a JsonObject
             GenericAdvertisement ad = event.getItem();
             // Get the advertisement with its specific fields and structure of the sub-classes ( car, asset , etc).
-            GenericAdvertisement extendedAd = AdvertisementUtils.findById(ad.getId(),allAds);
-            JSONObject jsonAd = buildAdvertisementAsJson(ad,extendedAd);
+            GenericAdvertisement extendedAd = AdvertisementUtils.findById(ad.getId(), allAds);
+            JSONObject jsonAd = buildAdvertisementAsJson(ad, extendedAd);
 
             // set the JSON string as the text of the text area
             jsonTextArea.setValue(jsonAd.toString());
@@ -117,9 +117,9 @@ public class MainView extends VerticalLayout {
         });
     }
 
-    private HttpMethod matchHttpMethod(String httpMethodString){
+    private HttpMethod matchHttpMethod(String httpMethodString) {
 
-        switch(httpMethodString) {
+        switch (httpMethodString) {
             case createOperation:
                 return HttpMethod.POST;
             case updateOperation:
@@ -134,16 +134,17 @@ public class MainView extends VerticalLayout {
 
     }
 
-    private String buildSuffixByMethod(String httpMethod,JSONObject requestBody) throws JSONException {
+    private String buildSuffixByMethod(String httpMethod, JSONObject requestBody) throws JSONException {
 
-       if(!httpMethod.equals(createOperation)){
+        if (!httpMethod.equals(createOperation)) {
             String id = requestBody.getString("id");
             return id;
         }
 
         return createOperation.toLowerCase();
     }
-    private String buildUrlPrefixByCategory() throws JSONException{
+
+    private String buildUrlPrefixByCategory() throws JSONException {
         String urlPrefix = Constants.emptyString;
 
         String category = categories.getValue();
@@ -169,6 +170,7 @@ public class MainView extends VerticalLayout {
     /**
      * The follwoing method is aimed to validate the full json structure by its category.
      * Throws a json exception in case a required field does not exist.
+     *
      * @param requestBody
      * @return
      * @throws JSONException
@@ -204,6 +206,7 @@ public class MainView extends VerticalLayout {
 
     /**
      * Make sure the request has all the needed fields
+     *
      * @param requestBody
      * @param httpMethod
      * @return
@@ -211,22 +214,23 @@ public class MainView extends VerticalLayout {
      */
 
     //todo: add all the below to the constants:
-    private boolean validateRequest(JSONObject requestBody,String httpMethod) throws JSONException {
+    private boolean validateRequest(JSONObject requestBody, String httpMethod) throws JSONException {
         // for any request except creation, we should verify the id field exists.
-        if(!httpMethod.equals(createOperation)){
+        if (!httpMethod.equals(createOperation)) {
             requestBody.getString(Constants.id);
         }
         // For 'Create' or 'Edit', verify that we have a full json structure with all the Ad required fields
-        if(httpMethod.equals(createOperation) || httpMethod.equals(updateOperation)){
+        if (httpMethod.equals(createOperation) || httpMethod.equals(updateOperation)) {
             return validateFullJsonStructure(requestBody);
         }
 
         return true;
     }
+
     /**
      * Perform CRUD operations as needed
      */
-    private void performCRUD(Button operationBtn){
+    private void performCRUD(Button operationBtn) {
 
         validateJson();
         String jsonString = jsonTextArea.getValue();
@@ -234,14 +238,14 @@ public class MainView extends VerticalLayout {
         JSONObject requestBody = null;
 
         try {
-            requestBody  = new JSONObject(tokener);
+            requestBody = new JSONObject(tokener);
 
 
             // Send the request
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             String category = categories.getValue();
-            requestBody.put(Constants.category,category);
+            requestBody.put(Constants.category, category);
             HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
             HttpMethod method = null;
@@ -250,15 +254,15 @@ public class MainView extends VerticalLayout {
             //todo: change requestBody param name
 
             String httpMethodString = operationBtn.getText();
-            validateRequest(requestBody,httpMethodString);
+            validateRequest(requestBody, httpMethodString);
 
             urlPrefix = buildUrlPrefixByCategory();
-            urlSuffix = buildSuffixByMethod(httpMethodString ,requestBody);
+            urlSuffix = buildSuffixByMethod(httpMethodString, requestBody);
 
-            method = matchHttpMethod( httpMethodString);
-            String url = Constants.baseUrl+urlPrefix+"/"+urlSuffix;
+            method = matchHttpMethod(httpMethodString);
+            String url = Constants.baseUrl + urlPrefix + "/" + urlSuffix;
 
-            logger.info("Sending request of type:"+httpMethodString+" to url:"+url);
+            logger.info("Sending request of type:" + httpMethodString + " to url:" + url);
             ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
 
             // Reload the grid with the updated data
@@ -267,10 +271,10 @@ public class MainView extends VerticalLayout {
 
             // Check the response status code
             if (response.getStatusCode() == HttpStatus.OK) {
-                Notification.show("Successfully sending http request:"+method+". Response body was:"+response.getBody(), 3000,
+                Notification.show("Successfully sending http request:" + method + ". Response body was:" + response.getBody(), 3000,
                         Notification.Position.BOTTOM_CENTER);
             } else {
-                Notification.show("Error sending http request:"+method+".Detected status:"+response.getStatusCode()+". aborting.", 3000,
+                Notification.show("Error sending http request:" + method + ".Detected status:" + response.getStatusCode() + ". aborting.", 3000,
                         Notification.Position.BOTTOM_CENTER);
             }
 
@@ -279,8 +283,7 @@ public class MainView extends VerticalLayout {
             e.printStackTrace();
             Notification.show(AdvertisementUtils.generalErrorMsg(e), 3000,
                     Notification.Position.BOTTOM_CENTER);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Notification.show(AdvertisementUtils.generalErrorMsg(e), 3000,
                     Notification.Position.BOTTOM_CENTER);
@@ -288,10 +291,11 @@ public class MainView extends VerticalLayout {
 
     }
 
-    private void setTextAreaSize(){
+    private void setTextAreaSize() {
         jsonTextArea.setWidth("80%");
         jsonTextArea.setHeight("70%");
     }
+
     public MainView() {
         jsonTextArea = new TextArea("Please provide a json entity to create or update");
         // Resize:
@@ -313,7 +317,7 @@ public class MainView extends VerticalLayout {
 
         FormLayout formLayout = new FormLayout();
 
-        formLayout.add(jsonTextArea,categories, createButton,updateButton,deleteButton,jumpToTop);
+        formLayout.add(jsonTextArea, categories, createButton, updateButton, deleteButton, jumpToTop);
 
         H1 titleLabel = new H1(pageLabelText);
         grid = ViewsUtils.buildGenericGrid(allAds.stream().toList());

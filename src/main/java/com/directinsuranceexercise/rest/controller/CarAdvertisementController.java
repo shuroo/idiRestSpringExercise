@@ -22,7 +22,7 @@ public class CarAdvertisementController extends AdvertisementController implemen
 
     @PutMapping("/{id}")
     public ResponseEntity<CarAdvertisement> updateAdvertisement(@PathVariable("id") String id,
-                                                                    @RequestBody CarAdvertisement carAdvertisement)
+                                                                @RequestBody CarAdvertisement carAdvertisement)
             throws Exception {
 
         ResponseEntity response = super.preUpdateAdvertisement(id, carAdvertisement);
@@ -36,7 +36,7 @@ public class CarAdvertisementController extends AdvertisementController implemen
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
-        AdvertisementUtils.setCarAd(existingCarAdvertisement , carAdvertisement);
+        AdvertisementUtils.setCarAd(existingCarAdvertisement, carAdvertisement);
         // no add or remove, this happened in the parent already
         allAdvertisements.add(existingCarAdvertisement);
         return ResponseEntity.ok(existingCarAdvertisement);
@@ -47,12 +47,13 @@ public class CarAdvertisementController extends AdvertisementController implemen
      * Jump Ad to top -
      * This method was implemented just for the routes consistency,
      * The implementation is exactly the same as in the parent.
+     *
      * @param id - the Ad Id
      * @return boolean
      */
     @GetMapping("/{id}")
     @Override
-    public boolean  bringAdvertisementToTop(@PathVariable("id") String id) {
+    public boolean bringAdvertisementToTop(@PathVariable("id") String id) {
         return super.bringAdvertisementToTop(id);
     }
 
@@ -60,6 +61,7 @@ public class CarAdvertisementController extends AdvertisementController implemen
      * Delete Ad -
      * This method was implemented just for the routes,
      * This method was implemented just for the routes consistency,
+     *
      * @param id - the Ad Id
      * @return boolean
      */

@@ -19,30 +19,30 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @PWA(name = "DirectInsuranceExercise", shortName = "DirectInsuranceExercise")
 @Push
 public class RestApplication implements AppShellConfigurator {
-	@Autowired
-	private AdvertisementConfig config;
+    @Autowired
+    private AdvertisementConfig config;
 
-	public static void main(String[] args) {
-		SpringApplication.run(RestApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(RestApplication.class, args);
+    }
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplateBuilder().build();
-	}
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplateBuilder().build();
+    }
 
 
-	// Other routes and classes
+    // Other routes and classes
 
-	/***
-	 * Method to build a sample advertisements for each given type will be called upon server start and post construct.
-	 */
-	@PostConstruct
-	public void init() {
-		AdManager adManager = AdManager.getInstance();
-		ConcurrentLinkedQueue allAdvertisements = adManager.getAdvertisements();
-		allAdvertisements.add(config.getSampleAssetAdvertisement());
-		allAdvertisements.add(config.getSampleCarAdvertisement());
-		allAdvertisements.add(config.getSampleElectronicsAdvertisement());
-	}
+    /***
+     * Method to build a sample advertisements for each given type will be called upon server start and post construct.
+     */
+    @PostConstruct
+    public void init() {
+        AdManager adManager = AdManager.getInstance();
+        ConcurrentLinkedQueue allAdvertisements = adManager.getAdvertisements();
+        allAdvertisements.add(config.getSampleAssetAdvertisement());
+        allAdvertisements.add(config.getSampleCarAdvertisement());
+        allAdvertisements.add(config.getSampleElectronicsAdvertisement());
+    }
 }

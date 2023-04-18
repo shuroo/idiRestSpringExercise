@@ -11,6 +11,7 @@ public class CarAdvertisement extends GenericAdvertisement {
     protected String color;
 
     protected String category = Constants.carCategory;
+
     public String getManufacturer() {
         return manifacturer;
     }

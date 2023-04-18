@@ -16,70 +16,69 @@ import com.vaadin.flow.router.Route;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
-    @Route(value = "/filterByMaxPrice")
-    public class FilterByMaxPriceView extends VerticalLayout {
-        private final RestTemplate restTemplate;
+@Route(value = "/filterByMaxPrice")
+public class FilterByMaxPriceView extends VerticalLayout {
+    private final RestTemplate restTemplate;
 
-        private Logger logger = Logger.getLogger(FilterByMaxPriceView.class.getName());
+    private Logger logger = Logger.getLogger(FilterByMaxPriceView.class.getName());
 
-        //todo: allow numbers only!
-        private TextField maxPriceField;
-        private Button filterButton;
+    //todo: allow numbers only!
+    private TextField maxPriceField;
+    private Button filterButton;
 
-        private final static String numberWasInvalidMsg = "Please enter a valid number";
+    private final static String numberWasInvalidMsg = "Please enter a valid number";
 
-        private final static String outOfRangeMsg = "Price must be between 0 and 1,000,000";
+    private final static String outOfRangeMsg = "Price must be between 0 and 1,000,000";
 
-        private final String titleLabel = "Filter By Max Price";
+    private final String titleLabel = "Filter By Max Price";
 
-        private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
+    private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
 
-        private Grid<GenericAdvertisement> grid;
+    private Grid<GenericAdvertisement> grid;
 
-        private void filterByMaxPrice() {
-            if(maxPriceField.getValue() == null){
-                    logger.warning("Bad initial value for max number, failed to filter");
-                    return;
-            }
-            Double maxPrice = null;
-            try {
-                maxPrice = Double.parseDouble(maxPriceField.getValue());
-            } catch (NumberFormatException e) {
-               logger.warning("Failed to filter by max price.Max field is not set to a valid value, please try again");
-               return;
-            }
-
-            List<GenericAdvertisement> filteredAds = AdvertisementUtils.filterByMaxPrice(maxPrice, allAds);
-            grid.setItems(filteredAds);
+    private void filterByMaxPrice() {
+        if (maxPriceField.getValue() == null) {
+            logger.warning("Bad initial value for max number, failed to filter");
+            return;
+        }
+        Double maxPrice = null;
+        try {
+            maxPrice = Double.parseDouble(maxPriceField.getValue());
+        } catch (NumberFormatException e) {
+            logger.warning("Failed to filter by max price.Max field is not set to a valid value, please try again");
+            return;
         }
 
-        public FilterByMaxPriceView(RestTemplate restTemplate) {
-            this.restTemplate = restTemplate;
-
-            // Initialize dropdown list, max price field, and filter button
-            maxPriceField = new TextField("Max Price");
-            Binder<Double> maxPriceBinder = new Binder<>();
-            maxPriceBinder.forField(maxPriceField)
-                    .withNullRepresentation(Constants.emptyString)
-                    .withConverter(new StringToDoubleConverter(numberWasInvalidMsg))
-                    .withValidator(new DoubleRangeValidator(outOfRangeMsg, 0.0, 1000000.0))
-                    .bind(maxPriceBindery -> null, (maxPriceBindery, value) -> {
-                        // Do nothing here, just need a write-only binding
-                    });
-
-            filterButton = new Button("Filter!", e -> filterByMaxPrice());
-
-            // Create the grid and add to the view
-            grid = ViewsUtils.buildGenericGrid(allAds);
-            //todo: handle strings
-            add(ViewsUtils.addTopLabel(titleLabel));
-            add(ViewsUtils.buildTopMenu());
-            add(ViewsUtils.createFilterByComponent( titleLabel,
-                    filterButton,
-                    maxPriceField), grid);
-        }
+        List<GenericAdvertisement> filteredAds = AdvertisementUtils.filterByMaxPrice(maxPrice, allAds);
+        grid.setItems(filteredAds);
     }
+
+    public FilterByMaxPriceView(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+
+        // Initialize dropdown list, max price field, and filter button
+        maxPriceField = new TextField("Max Price");
+        Binder<Double> maxPriceBinder = new Binder<>();
+        maxPriceBinder.forField(maxPriceField)
+                .withNullRepresentation(Constants.emptyString)
+                .withConverter(new StringToDoubleConverter(numberWasInvalidMsg))
+                .withValidator(new DoubleRangeValidator(outOfRangeMsg, 0.0, 1000000.0))
+                .bind(maxPriceBindery -> null, (maxPriceBindery, value) -> {
+                    // Do nothing here, just need a write-only binding
+                });
+
+        filterButton = new Button("Filter!", e -> filterByMaxPrice());
+
+        // Create the grid and add to the view
+        grid = ViewsUtils.buildGenericGrid(allAds);
+        //todo: handle strings
+        add(ViewsUtils.addTopLabel(titleLabel));
+        add(ViewsUtils.buildTopMenu());
+        add(ViewsUtils.createFilterByComponent(titleLabel,
+                filterButton,
+                maxPriceField), grid);
+    }
+}
 

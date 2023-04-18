@@ -4,7 +4,6 @@ package com.directinsuranceexercise.rest.view;
 import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.ViewsUtils;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
@@ -25,7 +24,7 @@ public class ShowCarsView extends VerticalLayout {
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
     private final String titleLabel = "Car Advertisements";
 
-    public ShowCarsView(){
+    public ShowCarsView() {
         add(ViewsUtils.addTopLabel(titleLabel));
         add(ViewsUtils.buildTopMenu());
         add(ViewsUtils.buildCarGrid(allAds));

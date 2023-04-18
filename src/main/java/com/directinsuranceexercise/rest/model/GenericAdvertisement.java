@@ -6,7 +6,7 @@ import com.directinsuranceexercise.rest.utilities.Constants;
 import java.util.logging.Logger;
 
 
-public class GenericAdvertisement{
+public class GenericAdvertisement {
     private static final Logger logger = Logger.getLogger(GenericAdvertisement.class.getName());
 
     private String id;
@@ -17,7 +17,9 @@ public class GenericAdvertisement{
     private String contactPhoneNumber;
     private Double price;
 
-    public GenericAdvertisement(){}
+    public GenericAdvertisement() {
+    }
+
     public GenericAdvertisement(Double price, String contactName, String contactPhoneNumber) {
         this.id = AdvertisementUtils.createId();
         this.contactName = contactName;

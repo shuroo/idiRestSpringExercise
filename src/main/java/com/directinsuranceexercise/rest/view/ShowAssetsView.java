@@ -3,9 +3,7 @@ package com.directinsuranceexercise.rest.view;
 
 import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
-import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.ViewsUtils;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
@@ -26,7 +24,7 @@ public class ShowAssetsView extends VerticalLayout {
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
     private final String titleLabel = "Asset Advertisements";
 
-    public ShowAssetsView(){
+    public ShowAssetsView() {
         add(ViewsUtils.addTopLabel(titleLabel));
         add(ViewsUtils.buildTopMenu());
         add(ViewsUtils.buildAssetGrid(allAds));

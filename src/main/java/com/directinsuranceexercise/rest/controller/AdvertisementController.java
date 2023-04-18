@@ -30,8 +30,8 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
 
         try {
             AdvertisementUtils.bringToTop(id, allAdvertisements);
-        }catch (Exception e){
-            logger.warning("Failed to perform operation 'bringToTo'. Error:"+e.getMessage());
+        } catch (Exception e) {
+            logger.warning("Failed to perform operation 'bringToTo'. Error:" + e.getMessage());
             // Better to return status code when possible.
             return false;
         }
@@ -43,26 +43,24 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
     /**
      * Method for before creation of a new Advertisement: make sure the id does not already exists in the system,
      * generate a new id
+     *
      * @param ad
      * @return
      */
 
 ////////////////////////////////////////////////////////////////////
-
-
     public ResponseEntity createAdvertisement(String category, GenericAdvertisement advertisement) throws Exception {
         // Generate a new ID for the advertisement and add it to the list
         AdvertisementUtils.generateAndSetId(advertisement);
         advertisement.setCategory(category);
 
-        if (AdvertisementUtils.findById(advertisement.getId(),allAdvertisements) != null) {
+        if (AdvertisementUtils.findById(advertisement.getId(), allAdvertisements) != null) {
             throw new Exception("The following ID already exists in the system. method is aborting.");
         }
         allAdvertisements.add(advertisement);
         return ResponseEntity.ok(advertisement);
 
     }
-
 
 
     // todo: inherit and split the updates.
@@ -78,7 +76,7 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
     public synchronized ResponseEntity<GenericAdvertisement> preUpdateAdvertisement(
             String id, GenericAdvertisement assetAdvertisement) throws Exception {
 
-        GenericAdvertisement existingAssetAdvertisement = AdvertisementUtils.findById(id,allAdvertisements);
+        GenericAdvertisement existingAssetAdvertisement = AdvertisementUtils.findById(id, allAdvertisements);
         if (existingAssetAdvertisement == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST); // Such ID does not exists
         }
@@ -86,12 +84,11 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
         existingAssetAdvertisement.setContactPhoneNumber(assetAdvertisement.getContactPhoneNumber());
         existingAssetAdvertisement.setPrice(assetAdvertisement.getPrice());
         existingAssetAdvertisement.setId(assetAdvertisement.getId());
-        //remove the old advertisement by its id ( should be synced )
-        if(!deleteAdvertisement(id)){
-            logger.warning("Failed to remove the old advertisement of id:"+id+", hence the update failed. aborting");
+        // Remove the old advertisement by its id ( should be synced )
+        if (!deleteAdvertisement(id)) {
+            logger.warning("Failed to remove the old advertisement of id:" + id + ", hence the update failed. aborting");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        ///System.out.println("Creating a new Entity!!"+existingAssetAdvertisement.getContactPhoneNumber());
         return ResponseEntity.ok(existingAssetAdvertisement);
     }
 
@@ -100,8 +97,8 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
 
         try {
             return allAdvertisements.removeIf(ad -> ad.getId().equals(id));
-        }catch (Exception e){
-            logger.warning("Failed to delete record, Exception detected with msg:"+e.getMessage());
+        } catch (Exception e) {
+            logger.warning("Failed to delete record, Exception detected with msg:" + e.getMessage());
             return false;
         }
     }

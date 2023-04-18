@@ -20,7 +20,7 @@ public class AssetAdvertisementController extends AdvertisementController implem
 
     @PutMapping("/{id}")
     public ResponseEntity<AssetAdvertisement> updateAdvertisement(@PathVariable("id") String id,
-                                                                    @RequestBody AssetAdvertisement assetAdvertisement)
+                                                                  @RequestBody AssetAdvertisement assetAdvertisement)
             throws Exception {
 
         ResponseEntity response = super.preUpdateAdvertisement(id, assetAdvertisement);
@@ -33,14 +33,14 @@ public class AssetAdvertisementController extends AdvertisementController implem
         if (existingAssetAdvertisement == null) {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
-        AdvertisementUtils.setAssetAd(existingAssetAdvertisement , assetAdvertisement);
+        AdvertisementUtils.setAssetAd(existingAssetAdvertisement, assetAdvertisement);
         allAdvertisements.add(existingAssetAdvertisement);
         return ResponseEntity.ok(existingAssetAdvertisement);
     }
 
     @GetMapping("/{id}")
     @Override
-    public boolean  bringAdvertisementToTop(@PathVariable("id") String id) {
+    public boolean bringAdvertisementToTop(@PathVariable("id") String id) {
         return super.bringAdvertisementToTop(id);
     }
 

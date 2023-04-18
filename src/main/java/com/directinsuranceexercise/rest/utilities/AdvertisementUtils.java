@@ -18,9 +18,9 @@ public class AdvertisementUtils {
     private static final java.util.logging.Logger logger = Logger.getLogger(AdvertisementUtils.class.getName());
 
 
-
     /**
      * Method to perform 'jump' by id - to the top of the list
+     *
      * @param id
      * @param allAdvertisements
      */
@@ -34,56 +34,55 @@ public class AdvertisementUtils {
             }
         }
     }
-    public static List<GenericAdvertisement> filterByCategory(String category, List<GenericAdvertisement> allAdvertisements){
+
+    public static List<GenericAdvertisement> filterByCategory(String category, List<GenericAdvertisement> allAdvertisements) {
         return allAdvertisements.stream().filter(ad -> ad.getCategory().equals(category)).toList();
     }
 
-    public static List<GenericAdvertisement> filterByMaxPrice(Double maxPrice, List<GenericAdvertisement> allAdvertisements){
-        if (maxPrice == null){
+    public static List<GenericAdvertisement> filterByMaxPrice(Double maxPrice, List<GenericAdvertisement> allAdvertisements) {
+        if (maxPrice == null) {
             return null;
         }
-        return allAdvertisements.stream().filter(ad -> ad.getPrice()<= maxPrice).toList();
+        return allAdvertisements.stream().filter(ad -> ad.getPrice() <= maxPrice).toList();
     }
 
-    public static List<AssetAdvertisement> convertToAssetAds(List<GenericAdvertisement> ads){
+    public static List<AssetAdvertisement> convertToAssetAds(List<GenericAdvertisement> ads) {
         List<AssetAdvertisement> assetAds = null;
-        try{
+        try {
             assetAds = ads.stream().map(ad -> (AssetAdvertisement) ad).toList();
-        }
-        catch (Exception e){
-            logger.warning("Failed to convert list from generic ads to asset ads. please check the data. first ad id was:"+ads.get(0).getId());
+        } catch (Exception e) {
+            logger.warning("Failed to convert list from generic ads to asset ads. please check the data. first ad id was:" + ads.get(0).getId());
         }
 
         return assetAds;
     }
 
-    public static String createErrorEditMsg(String category){
-        return "Failed to parse the given id as an "+category+". Make sure that the category matches the required advertisement type";
+    public static String createErrorEditMsg(String category) {
+        return "Failed to parse the given id as an " + category + ". Make sure that the category matches the required advertisement type";
     }
 
-    public static List<CarAdvertisement> convertToCarAds(List<GenericAdvertisement> ads){
+    public static List<CarAdvertisement> convertToCarAds(List<GenericAdvertisement> ads) {
         List<CarAdvertisement> catAds = null;
-        try{
+        try {
             catAds = ads.stream().map(ad -> (CarAdvertisement) ad).toList();
-        }
-        catch (Exception e){
-            logger.warning("Failed to convert list from generic ads to car ads. please check the data. first ad id was:"+ads.get(0).getId());
+        } catch (Exception e) {
+            logger.warning("Failed to convert list from generic ads to car ads. please check the data. first ad id was:" + ads.get(0).getId());
         }
 
         return catAds;
     }
 
-    public static List<ElectricityAdvertisement> convertToElectronicAds(List<GenericAdvertisement> ads){
+    public static List<ElectricityAdvertisement> convertToElectronicAds(List<GenericAdvertisement> ads) {
         List<ElectricityAdvertisement> electsAds = null;
-        try{
+        try {
             electsAds = ads.stream().map(ad -> (ElectricityAdvertisement) ad).toList();
-        }
-        catch (Exception e){
-            logger.warning("Failed to convert list from generic ads to car ads. please check the data. first ad id was:"+ads.get(0).getId());
+        } catch (Exception e) {
+            logger.warning("Failed to convert list from generic ads to car ads. please check the data. first ad id was:" + ads.get(0).getId());
         }
 
         return electsAds;
     }
+
     /**
      * Method to auto generate and set id in the advertisement object.
      *
@@ -95,31 +94,31 @@ public class AdvertisementUtils {
         advertisement.setId(id);
     }
 
-    public static String createId(){
+    public static String createId() {
         return UUID.randomUUID().toString();
     }
 
-    public static GenericAdvertisement findById(String id, ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements){
+    public static GenericAdvertisement findById(String id, ConcurrentLinkedQueue<GenericAdvertisement> allAdvertisements) {
         GenericAdvertisement foundAd = allAdvertisements.stream()
                 .filter(ad -> {
-                    System.out.println("^^^^ current id:"+id+",matched id:"+ad.getId());
                     return ad.getId().equals(id);
                 })
                 .findFirst()
                 .orElse(null);
         // May be null. return the result.
-        if(foundAd == null){
-            logger.warning("ID:"+id+" in method 'findById' was not found. returning null.");
+        if (foundAd == null) {
+            logger.warning("ID:" + id + " in method 'findById' was not found. returning null.");
         }
         return foundAd;
     }
 
     /**
      * Method to update an existing car advertisement with input fields fetched from input entity
+     *
      * @param existingCarAdvertisement - The existing advertisement
-     * @param carAdvertisementInput- The input advertisement
+     * @param carAdvertisementInput-   The input advertisement
      */
-    public static void setCarAd(CarAdvertisement existingCarAdvertisement, CarAdvertisement carAdvertisementInput){
+    public static void setCarAd(CarAdvertisement existingCarAdvertisement, CarAdvertisement carAdvertisementInput) {
         existingCarAdvertisement.setColor(carAdvertisementInput.getColor());
         existingCarAdvertisement.setKm(carAdvertisementInput.getKm());
         existingCarAdvertisement.setManufacturer(carAdvertisementInput.getManufacturer());
@@ -129,10 +128,11 @@ public class AdvertisementUtils {
 
     /**
      * Method to update an existing asset advertisement with input fields fetched from input entity
+     *
      * @param existingAssetAdvertisement - The existing advertisement
-     * @param assetAdvertisementInput- The input advertisement
+     * @param assetAdvertisementInput-   The input advertisement
      */
-    public static void setAssetAd(AssetAdvertisement existingAssetAdvertisement, AssetAdvertisement assetAdvertisementInput){
+    public static void setAssetAd(AssetAdvertisement existingAssetAdvertisement, AssetAdvertisement assetAdvertisementInput) {
         existingAssetAdvertisement.setAssetSize(assetAdvertisementInput.getAssetSize());
         existingAssetAdvertisement.setAssetAdType(assetAdvertisementInput.getAssetAdType());
         existingAssetAdvertisement.setNumberOfRooms(assetAdvertisementInput.getNumberOfRooms());
@@ -140,10 +140,11 @@ public class AdvertisementUtils {
 
     /**
      * Method to update an existing generic advertisement with input fields fetched from input entity
+     *
      * @param existingAdvertisement - The existing advertisement
-     * @param advertisementInput- The input advertisement
+     * @param advertisementInput-   The input advertisement
      */
-    public static void setGenericAd(GenericAdvertisement existingAdvertisement, GenericAdvertisement advertisementInput){
+    public static void setGenericAd(GenericAdvertisement existingAdvertisement, GenericAdvertisement advertisementInput) {
         existingAdvertisement.setCategory(advertisementInput.getCategory());
         existingAdvertisement.setPrice(advertisementInput.getPrice());
         existingAdvertisement.setContactName(advertisementInput.getContactName());
@@ -153,20 +154,22 @@ public class AdvertisementUtils {
 
     /**
      * Method to update an existing electricity advertisement with input fields fetched from input entity
+     *
      * @param existingElectricityAdvertisement - The existing advertisement
-     * @param electricityAdvertisementInput- The input advertisement
+     * @param electricityAdvertisementInput-   The input advertisement
      */
-    public static void setElectricityAd(ElectricityAdvertisement existingElectricityAdvertisement, ElectricityAdvertisement electricityAdvertisementInput){
+    public static void setElectricityAd(ElectricityAdvertisement existingElectricityAdvertisement, ElectricityAdvertisement electricityAdvertisementInput) {
         existingElectricityAdvertisement.setCondition(electricityAdvertisementInput.getCondition());
         existingElectricityAdvertisement.setElectricityType(electricityAdvertisementInput.getElectricityType());
     }
 
     /**
      * General method for exception handling ( with notifications etc )
+     *
      * @param e - The Exception thrown
      * @ String - The Error message
      */
-    public static String generalErrorMsg(Exception e){
-        return "Error detected:"+e.getMessage()+".Aborting, Please try again";
+    public static String generalErrorMsg(Exception e) {
+        return "Error detected:" + e.getMessage() + ".Aborting, Please try again";
     }
 }

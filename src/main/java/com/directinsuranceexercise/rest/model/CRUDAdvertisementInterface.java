@@ -1,6 +1,5 @@
 package com.directinsuranceexercise.rest.model;
 
-import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -9,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 public interface CRUDAdvertisementInterface {
 
     public ResponseEntity createAdvertisement(String category, GenericAdvertisement advertisement) throws Exception;
+
     public ResponseEntity<GenericAdvertisement> preUpdateAdvertisement(
             String id, GenericAdvertisement assetAdvertisement) throws Exception;
 
@@ -17,6 +17,7 @@ public interface CRUDAdvertisementInterface {
 
     /**
      * Jump the ad in its order
+     *
      * @return
      */
     public boolean bringAdvertisementToTop(String id);
