@@ -1,4 +1,4 @@
-package com.directinsuranceexercise.rest.controller;
+package com.directinsuranceexercise.rest.model;
 
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 public interface CRUDAdvertisementInterface {
 
     public ResponseEntity createAdvertisement(String category, GenericAdvertisement advertisement) throws Exception;
-    public ResponseEntity<GenericAdvertisement> updateAdvertisement(
+    public ResponseEntity<GenericAdvertisement> preUpdateAdvertisement(
             String id, GenericAdvertisement assetAdvertisement) throws Exception;
 
 

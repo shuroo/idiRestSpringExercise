@@ -113,4 +113,51 @@ public class AdvertisementUtils {
         }
         return foundAd;
     }
+
+    /**
+     * Method to update an existing car advertisement with input fields fetched from input entity
+     * @param existingCarAdvertisement - The existing advertisement
+     * @param carAdvertisementInput- The input advertisement
+     */
+    public static void setCarAd(CarAdvertisement existingCarAdvertisement, CarAdvertisement carAdvertisementInput){
+        existingCarAdvertisement.setColor(carAdvertisementInput.getColor());
+        existingCarAdvertisement.setKm(carAdvertisementInput.getKm());
+        existingCarAdvertisement.setManufacturer(carAdvertisementInput.getManufacturer());
+        existingCarAdvertisement.setModel(carAdvertisementInput.getModel());
+        existingCarAdvertisement.setYear(carAdvertisementInput.getYear());
+    }
+
+    /**
+     * Method to update an existing asset advertisement with input fields fetched from input entity
+     * @param existingAssetAdvertisement - The existing advertisement
+     * @param assetAdvertisementInput- The input advertisement
+     */
+    public static void setAssetAd(AssetAdvertisement existingAssetAdvertisement, AssetAdvertisement assetAdvertisementInput){
+        existingAssetAdvertisement.setAssetSize(assetAdvertisementInput.getAssetSize());
+        existingAssetAdvertisement.setAssetAdType(assetAdvertisementInput.getAssetAdType());
+        existingAssetAdvertisement.setNumberOfRooms(assetAdvertisementInput.getNumberOfRooms());
+    }
+
+    /**
+     * Method to update an existing generic advertisement with input fields fetched from input entity
+     * @param existingAdvertisement - The existing advertisement
+     * @param advertisementInput- The input advertisement
+     */
+    public static void setGenericAd(GenericAdvertisement existingAdvertisement, GenericAdvertisement advertisementInput){
+        existingAdvertisement.setCategory(advertisementInput.getCategory());
+        existingAdvertisement.setPrice(advertisementInput.getPrice());
+        existingAdvertisement.setContactName(advertisementInput.getContactName());
+        existingAdvertisement.setContactPhoneNumber(advertisementInput.getContactPhoneNumber());
+    }
+
+
+    /**
+     * Method to update an existing electricity advertisement with input fields fetched from input entity
+     * @param existingElectricityAdvertisement - The existing advertisement
+     * @param electricityAdvertisementInput- The input advertisement
+     */
+    public static void setElectricityAd(ElectricityAdvertisement existingElectricityAdvertisement, ElectricityAdvertisement electricityAdvertisementInput){
+        existingElectricityAdvertisement.setCondition(electricityAdvertisementInput.getCondition());
+        existingElectricityAdvertisement.setElectricityType(electricityAdvertisementInput.getElectricityType());
+    }
 }

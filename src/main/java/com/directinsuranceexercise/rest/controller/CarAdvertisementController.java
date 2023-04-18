@@ -1,6 +1,8 @@
 package com.directinsuranceexercise.rest.controller;
 
+import com.directinsuranceexercise.rest.model.CRUDAdvertisementInterface;
 import com.directinsuranceexercise.rest.model.CarAdvertisement;
+import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class CarAdvertisementController extends AdvertisementController implemen
                                                                     @RequestBody CarAdvertisement carAdvertisement)
             throws Exception {
 
-        ResponseEntity response = super.updateAdvertisement(id, carAdvertisement);
+        ResponseEntity response = super.preUpdateAdvertisement(id, carAdvertisement);
         CarAdvertisement existingCarAdvertisement = null;
         try {
             existingCarAdvertisement = (CarAdvertisement) response.getBody();
@@ -33,11 +35,8 @@ public class CarAdvertisementController extends AdvertisementController implemen
         if (existingCarAdvertisement == null) {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
-        existingCarAdvertisement.setColor(carAdvertisement.getColor());
-        existingCarAdvertisement.setKm(carAdvertisement.getKm());
-        existingCarAdvertisement.setManufacturer(carAdvertisement.getManufacturer());
-        existingCarAdvertisement.setModel(carAdvertisement.getModel());
-        existingCarAdvertisement.setYear(carAdvertisement.getYear());
+
+        AdvertisementUtils.setCarAd(existingCarAdvertisement , carAdvertisement);
         // no add or remove, this happened in the parent already
         allAdvertisements.add(existingCarAdvertisement);
         return ResponseEntity.ok(existingCarAdvertisement);

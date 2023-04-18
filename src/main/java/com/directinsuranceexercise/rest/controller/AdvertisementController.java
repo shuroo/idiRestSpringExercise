@@ -1,6 +1,7 @@
 package com.directinsuranceexercise.rest.controller;
 
 import com.directinsuranceexercise.rest.model.AdManager;
+import com.directinsuranceexercise.rest.model.CRUDAdvertisementInterface;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import org.springframework.http.HttpStatus;
@@ -74,7 +75,7 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
      * @return
      * @throws Exception
      */
-    public synchronized ResponseEntity<GenericAdvertisement> updateAdvertisement(
+    public synchronized ResponseEntity<GenericAdvertisement> preUpdateAdvertisement(
             String id, GenericAdvertisement assetAdvertisement) throws Exception {
 
         GenericAdvertisement existingAssetAdvertisement = AdvertisementUtils.findById(id,allAdvertisements);
