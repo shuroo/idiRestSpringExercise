@@ -160,4 +160,13 @@ public class AdvertisementUtils {
         existingElectricityAdvertisement.setCondition(electricityAdvertisementInput.getCondition());
         existingElectricityAdvertisement.setElectricityType(electricityAdvertisementInput.getElectricityType());
     }
+
+    /**
+     * General method for exception handling ( with notifications etc )
+     * @param e - The Exception thrown
+     * @ String - The Error message
+     */
+    public static String generalErrorMsg(Exception e){
+        return "Error detected:"+e.getMessage()+".Aborting, Please try again";
+    }
 }

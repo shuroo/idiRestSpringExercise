@@ -34,15 +34,15 @@ public class MainView extends VerticalLayout {
     private ConcurrentLinkedQueue<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements();
 
     private static final java.util.logging.Logger logger = Logger.getLogger(AdvertisementUtils.class.getName());
-
-    final String createOperation = "CREATE";
-    final String updateOperation = "UPDATE";
-    final String deleteOperation = "DELETE";
-    final String jumpOperation = "JumpToTop";
-
-    final String baseUrl = "http://localhost:8080/";
-
     final String pageLabelText = "CRUD Advertisements";
+
+    private final String createOperation = "CREATE";
+    private final String updateOperation = "UPDATE";
+    private final String deleteOperation = "DELETE";
+    private final String jumpToTopOperation = "JumpToTop";
+
+    private final static String invalidCategoryMsg = "Category is invalid, Please choose a category";
+    private final static String jsonInputRequredMsg = "JSON Input is Required";
     private final TextArea jsonTextArea;
     private final Button createButton;
     private final Button updateButton;
@@ -55,31 +55,31 @@ public class MainView extends VerticalLayout {
     private final JsonBean bean = new JsonBean();
 
     private void genericAdvertisementAsJson(JSONObject jsonAd,GenericAdvertisement ad) throws JSONException {
-        jsonAd.put("id",ad.getId());
-        jsonAd.put("price",ad.getPrice());
-        jsonAd.put("contactName",ad.getContactName());
-        jsonAd.put("contactPhoneNumber",ad.getContactPhoneNumber());
+        jsonAd.put(Constants.id,ad.getId());
+        jsonAd.put(Constants.price,ad.getPrice());
+        jsonAd.put(Constants.contactName,ad.getContactName());
+        jsonAd.put(Constants.contactPhoneNumber,ad.getContactPhoneNumber());
     }
 
     private void assetAdvertisementAsJson(JSONObject jsonAd, AssetAdvertisement ad) throws JSONException {
         // todo: put in constants!!
-        jsonAd.put("numberOfRooms",ad.getNumberOfRooms());
-        jsonAd.put("assetAdType",ad.getAssetAdType());
-        jsonAd.put("assetSize",ad.getAssetSize());
+        jsonAd.put(Constants.numberOfRooms,ad.getNumberOfRooms());
+        jsonAd.put(Constants.assetAdType,ad.getAssetAdType());
+        jsonAd.put(Constants.assetSize,ad.getAssetSize());
     }
 
     private void carAdvertisementAsJson(JSONObject jsonAd, CarAdvertisement ad) throws JSONException {
-        jsonAd.put("color",ad.getColor());
-        jsonAd.put("model",ad.getPrice());
-        jsonAd.put("manufacturer",ad.getManufacturer());
-        jsonAd.put("year",ad.getYear());
-        jsonAd.put("km",ad.getKm());
+        jsonAd.put(Constants.color, ad.getColor());
+        jsonAd.put(Constants.model, ad.getPrice());
+        jsonAd.put(Constants.manufacturer, ad.getManufacturer());
+        jsonAd.put(Constants.year,ad.getYear());
+        jsonAd.put(Constants.km,ad.getKm());
     }
 
     private void electronicsAdvertisementAsJson(JSONObject jsonAd, ElectricityAdvertisement ad) throws JSONException {
-        // todo: put in constants!!
-        jsonAd.put("condition",ad.getCondition());
-        jsonAd.put("electricityType",ad.getElectricityType());
+
+        jsonAd.put(Constants.condition,ad.getCondition());
+        jsonAd.put(Constants.electricityType,ad.getElectricityType());
     }
 
     private JSONObject buildAdvertisementAsJson(GenericAdvertisement ad, GenericAdvertisement extendedAd){
@@ -126,7 +126,7 @@ public class MainView extends VerticalLayout {
                 return HttpMethod.PUT;
             case deleteOperation:
                 return HttpMethod.DELETE;
-            case jumpOperation:
+            case jumpToTopOperation:
                 return HttpMethod.GET;
         }
 
@@ -136,8 +136,7 @@ public class MainView extends VerticalLayout {
 
     private String buildSuffixByMethod(String httpMethod,JSONObject requestBody) throws JSONException {
 
-        // todo: to support update we need something like: assetAdvertisements/{id}. can we switch all to generic operations?
-        if(!httpMethod.equals(createOperation)){
+       if(!httpMethod.equals(createOperation)){
             String id = requestBody.getString("id");
             return id;
         }
@@ -145,7 +144,7 @@ public class MainView extends VerticalLayout {
         return createOperation.toLowerCase();
     }
     private String buildUrlPrefixByCategory() throws JSONException{
-        String urlPrefix = "";
+        String urlPrefix = Constants.emptyString;
 
         String category = categories.getValue();
         switch (category) {
@@ -167,29 +166,36 @@ public class MainView extends VerticalLayout {
         return urlPrefix;
     }
 
+    /**
+     * The follwoing method is aimed to validate the full json structure by its category.
+     * Throws a json exception in case a required field does not exist.
+     * @param requestBody
+     * @return
+     * @throws JSONException
+     */
     private boolean validateFullJsonStructure(JSONObject requestBody) throws JSONException {
-        requestBody.getDouble("price");
-        requestBody.getString("contactPhoneNumber");
-        requestBody.getString("contactName");
+        requestBody.getDouble(Constants.price);
+        requestBody.getString(Constants.contactName);
+        requestBody.getString(Constants.contactPhoneNumber);
         String category = categories.getValue();
         switch (category) {
             case Constants.genericCategory:
-                Notification.show("Please choose a category", 3000, Notification.Position.BOTTOM_CENTER);
+                Notification.show(invalidCategoryMsg, 3000, Notification.Position.BOTTOM_CENTER);
                 return false;
             case Constants.assetCategory:
-                requestBody.getInt("assetSize");
-                requestBody.getInt("numberOfRooms");
+                requestBody.getInt(Constants.assetSize);
+                requestBody.getInt(Constants.numberOfRooms);
                 return true;
             case Constants.carCategory:
-                requestBody.getString("color");
-                requestBody.getString("model");
-                requestBody.getString("manufacturer");
-                requestBody.getInt("year");
-                requestBody.getInt("km");
+                requestBody.getString(Constants.color);
+                requestBody.getString(Constants.model);
+                requestBody.getString(Constants.manufacturer);
+                requestBody.getInt(Constants.year);
+                requestBody.getInt(Constants.km);
                 return true;
             case Constants.electricityCategory:
-                requestBody.getString("electricityType");
-                requestBody.getString("condition");
+                requestBody.getString(Constants.electricityType);
+                requestBody.getString(Constants.condition);
                 return true;
         }
 
@@ -208,7 +214,7 @@ public class MainView extends VerticalLayout {
     private boolean validateRequest(JSONObject requestBody,String httpMethod) throws JSONException {
         // for any request except creation, we should verify the id field exists.
         if(!httpMethod.equals(createOperation)){
-            requestBody.getString("id");
+            requestBody.getString(Constants.id);
         }
         // For 'Create' or 'Edit', verify that we have a full json structure with all the Ad required fields
         if(httpMethod.equals(createOperation) || httpMethod.equals(updateOperation)){
@@ -230,17 +236,12 @@ public class MainView extends VerticalLayout {
         try {
             requestBody  = new JSONObject(tokener);
 
-            // todo: Change this to use a text field in case of delete or jump
-
-            //todo: move to constants ... etc.
-
-            // todo: one can shorten it if the 'create' was generic!
 
             // Send the request
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             String category = categories.getValue();
-            requestBody.put("category",category);
+            requestBody.put(Constants.category,category);
             HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
             HttpMethod method = null;
@@ -255,7 +256,7 @@ public class MainView extends VerticalLayout {
             urlSuffix = buildSuffixByMethod(httpMethodString ,requestBody);
 
             method = matchHttpMethod( httpMethodString);
-            String url = baseUrl+urlPrefix+"/"+urlSuffix;
+            String url = Constants.baseUrl+urlPrefix+"/"+urlSuffix;
 
             logger.info("Sending request of type:"+httpMethodString+" to url:"+url);
             ResponseEntity<String> response = restTemplate.exchange(url, method, entity, String.class);
@@ -274,13 +275,14 @@ public class MainView extends VerticalLayout {
             }
 
 
-
         } catch (JSONException e) {
-            Notification.show("Error detected:"+e.getMessage()+".Aborting, Please try again", 3000,
+            e.printStackTrace();
+            Notification.show(AdvertisementUtils.generalErrorMsg(e), 3000,
                     Notification.Position.BOTTOM_CENTER);
         }
         catch (Exception e) {
-            Notification.show("Error detected:"+e.getMessage()+".Aborting, Please try again", 3000,
+            e.printStackTrace();
+            Notification.show(AdvertisementUtils.generalErrorMsg(e), 3000,
                     Notification.Position.BOTTOM_CENTER);
         }
 
@@ -300,7 +302,7 @@ public class MainView extends VerticalLayout {
         createButton = new Button(createOperation);
         updateButton = new Button(updateOperation);
         deleteButton = new Button(deleteOperation);
-        jumpToTop = new Button(jumpOperation);
+        jumpToTop = new Button(jumpToTopOperation);
 
         createButton.addClickListener(event ->
                 performCRUD(event.getSource()));
@@ -348,7 +350,7 @@ public class MainView extends VerticalLayout {
      * Private class to validate the given input as json
      */
     private static class JsonBean {
-        @javax.validation.constraints.NotNull(message = "JSON Input is Required")
+        @javax.validation.constraints.NotNull(message = jsonInputRequredMsg)
         @com.fasterxml.jackson.annotation.JsonProperty("json")
         private String json;
 

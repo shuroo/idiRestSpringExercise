@@ -8,18 +8,14 @@ import com.directinsuranceexercise.rest.utilities.ViewsUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 
-@Route(value = "/filterByCategory") // , layout = MainLayout.class
+@Route(value = "/filterByCategory")
 public class FilterByCategoryView extends VerticalLayout {
     private final RestTemplate restTemplate;
     private ComboBox<String> categoryDropdown;
@@ -28,6 +24,8 @@ public class FilterByCategoryView extends VerticalLayout {
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
 
     private final String pageLabelText = "Filter by Category";
+
+    private final String filterTitle = "Filter!";
 
     private Grid<GenericAdvertisement> grid;
 
@@ -49,7 +47,7 @@ public class FilterByCategoryView extends VerticalLayout {
 
         // Initialize dropdown list and filter button
         categoryDropdown = ViewsUtils.getCategoryOptions();
-        filterButton = new Button("Filter!", e -> filterByCategory());
+        filterButton = new Button(filterTitle, e -> filterByCategory());
 
         // Create the grid and add to the view
 

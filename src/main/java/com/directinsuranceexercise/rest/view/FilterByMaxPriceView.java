@@ -3,6 +3,7 @@ package com.directinsuranceexercise.rest.view;
 import com.directinsuranceexercise.rest.model.AdManager;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
+import com.directinsuranceexercise.rest.utilities.Constants;
 import com.directinsuranceexercise.rest.utilities.ViewsUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -27,6 +28,10 @@ import java.util.logging.Logger;
         //todo: allow numbers only!
         private TextField maxPriceField;
         private Button filterButton;
+
+        private final static String numberWasInvalidMsg = "Please enter a valid number";
+
+        private final static String outOfRangeMsg = "Price must be between 0 and 1,000,000";
 
         private final String titleLabel = "Filter By Max Price";
 
@@ -58,9 +63,9 @@ import java.util.logging.Logger;
             maxPriceField = new TextField("Max Price");
             Binder<Double> maxPriceBinder = new Binder<>();
             maxPriceBinder.forField(maxPriceField)
-                    .withNullRepresentation("")
-                    .withConverter(new StringToDoubleConverter("Please enter a valid number"))
-                    .withValidator(new DoubleRangeValidator("Price must be between 0 and 1,000,000", 0.0, 1000000.0))
+                    .withNullRepresentation(Constants.emptyString)
+                    .withConverter(new StringToDoubleConverter(numberWasInvalidMsg))
+                    .withValidator(new DoubleRangeValidator(outOfRangeMsg, 0.0, 1000000.0))
                     .bind(maxPriceBindery -> null, (maxPriceBindery, value) -> {
                         // Do nothing here, just need a write-only binding
                     });

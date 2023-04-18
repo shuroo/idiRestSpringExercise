@@ -42,4 +42,30 @@ public class ElectricityAdvertisementController extends AdvertisementController 
         return ResponseEntity.ok(existingElectricityAdvertisement);
     }
 
+    /**
+     * Jump Ad to top -
+     * This method was implemented just for the routes consistency,
+     * The implementation is exactly the same as in the parent.
+     * @param id - the Ad Id
+     * @return boolean
+     */
+    @GetMapping("/{id}")
+    @Override
+    public boolean  bringAdvertisementToTop(@PathVariable("id") String id) {
+        return super.bringAdvertisementToTop(id);
+    }
+
+    /**
+     * Delete Ad -
+     * This method was implemented just for the routes,
+     * This method was implemented just for the routes consistency,
+     * @param id - the Ad Id
+     * @return boolean
+     */
+    @DeleteMapping("/{id}")
+    @Override
+    public boolean deleteAdvertisement(@PathVariable("id") String id) {
+        return super.deleteAdvertisement(id);
+    }
+
 }

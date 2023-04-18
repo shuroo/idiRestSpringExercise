@@ -45,11 +45,11 @@ public class ViewsUtils {
     public static Grid<GenericAdvertisement> buildGenericGrid(List<GenericAdvertisement> allAds) {
         Grid<GenericAdvertisement> grid = new Grid<>();
         grid.setItems(allAds);
-        grid.addColumn(GenericAdvertisement::getId).setHeader("ID").setFlexGrow(1).setWidth("30%");
-        grid.addColumn(GenericAdvertisement::getCategory).setHeader("Category");
-        grid.addColumn(GenericAdvertisement::getPrice).setHeader("Price");
-        grid.addColumn(GenericAdvertisement::getContactName).setHeader("ContactName");
-        grid.addColumn(GenericAdvertisement::getContactPhoneNumber).setHeader("ContactPhone");
+        grid.addColumn(GenericAdvertisement::getId).setHeader(Constants.id.toUpperCase()).setFlexGrow(1).setWidth("30%");
+        grid.addColumn(GenericAdvertisement::getCategory).setHeader(Constants.category.toUpperCase());
+        grid.addColumn(GenericAdvertisement::getPrice).setHeader(Constants.price.toUpperCase());
+        grid.addColumn(GenericAdvertisement::getContactName).setHeader(Constants.contactName.toUpperCase());
+        grid.addColumn(GenericAdvertisement::getContactPhoneNumber).setHeader(Constants.contactPhoneNumber.toUpperCase());
         return grid;
     }
 
@@ -69,7 +69,7 @@ public class ViewsUtils {
         grid.addColumn(AssetAdvertisement::getId).setHeader("ID").setFlexGrow(1).setWidth("30%");
         grid.addColumn(AssetAdvertisement::getAssetAdType).setHeader("Type");
         grid.addColumn(AssetAdvertisement::getAssetSize).setHeader("Size");
-        grid.addColumn(AssetAdvertisement::getNumberOfRooms).setHeader("NumberOfRooms");
+        grid.addColumn(AssetAdvertisement::getNumberOfRooms).setHeader(Constants.numberOfRooms);
         return grid;
     }
 
@@ -105,7 +105,7 @@ public class ViewsUtils {
                                                     Button  filterButton,
                                                    Component criteriaField){
 
-        VerticalLayout filterWrapper = new VerticalLayout(new Label(currentPageLbl), filterButton);
+        VerticalLayout filterWrapper = new VerticalLayout(filterButton);
         HorizontalLayout layout = new HorizontalLayout(criteriaField,filterWrapper);
         return layout;
     }
