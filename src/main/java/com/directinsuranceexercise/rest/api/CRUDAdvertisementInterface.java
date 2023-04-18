@@ -1,5 +1,6 @@
-package com.directinsuranceexercise.rest.model;
+package com.directinsuranceexercise.rest.api;
 
+import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import org.springframework.http.ResponseEntity;
 
 /**

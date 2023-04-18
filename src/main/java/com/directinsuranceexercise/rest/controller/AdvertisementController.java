@@ -1,7 +1,7 @@
 package com.directinsuranceexercise.rest.controller;
 
 import com.directinsuranceexercise.rest.model.AdManager;
-import com.directinsuranceexercise.rest.model.CRUDAdvertisementInterface;
+import com.directinsuranceexercise.rest.api.CRUDAdvertisementInterface;
 import com.directinsuranceexercise.rest.model.GenericAdvertisement;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import org.springframework.http.HttpStatus;

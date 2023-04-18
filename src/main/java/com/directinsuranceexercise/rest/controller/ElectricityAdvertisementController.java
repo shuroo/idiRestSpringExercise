@@ -1,6 +1,6 @@
 package com.directinsuranceexercise.rest.controller;
 
-import com.directinsuranceexercise.rest.model.CRUDAdvertisementInterface;
+import com.directinsuranceexercise.rest.api.CRUDAdvertisementInterface;
 import com.directinsuranceexercise.rest.model.ElectricityAdvertisement;
 import com.directinsuranceexercise.rest.utilities.AdvertisementUtils;
 import com.directinsuranceexercise.rest.utilities.Constants;

@@ -6,7 +6,6 @@ import com.directinsuranceexercise.rest.utilities.Constants;
 import com.directinsuranceexercise.rest.utilities.ViewsUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
@@ -301,10 +300,10 @@ public class MainView extends VerticalLayout {
     }
 
     public MainView() {
-        jsonTextArea = new TextArea("Please provide a json entity to create or update");
+        jsonTextArea = new TextArea();
         // Resize:
         setTextAreaSize();
-        jsonTextArea.setPlaceholder("Enter a json advertisement input to perform CRUD or select from the list");
+        jsonTextArea.setLabel("Enter a json advertisement input to perform CRUD operations or select from the list");
         jsonTextArea.setValueChangeMode(ValueChangeMode.LAZY);
 
         createButton = new Button(createOperation);

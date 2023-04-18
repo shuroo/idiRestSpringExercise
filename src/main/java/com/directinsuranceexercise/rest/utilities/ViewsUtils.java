@@ -9,13 +9,13 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.ClickableRenderer;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -48,12 +48,31 @@ public class ViewsUtils {
     public static Grid<GenericAdvertisement> buildGenericGrid(List<GenericAdvertisement> allAds) {
         Grid<GenericAdvertisement> grid = new Grid<>();
         grid.setItems(allAds);
-        grid.addColumn(GenericAdvertisement::getId).setHeader(Constants.id.toUpperCase()).setFlexGrow(1).setWidth("30%");
-        grid.addColumn(GenericAdvertisement::getCategory).setHeader(Constants.category.toUpperCase());
-        grid.addColumn(GenericAdvertisement::getPrice).setHeader(Constants.price.toUpperCase());
-        grid.addColumn(GenericAdvertisement::getContactName).setHeader(Constants.contactName.toUpperCase());
-        grid.addColumn(GenericAdvertisement::getContactPhoneNumber).setHeader(Constants.contactPhoneNumber.toUpperCase());
+        setHeaderCapitalizeLabel(resizeIdCol(grid.addColumn(GenericAdvertisement::getId)),Constants.id);
+        setHeaderCapitalizeLabel(grid.addColumn(GenericAdvertisement::getCategory),Constants.category);
+        setHeaderCapitalizeLabel(grid.addColumn(GenericAdvertisement::getPrice),Constants.price);
+        setHeaderCapitalizeLabel(grid.addColumn(GenericAdvertisement::getContactName),Constants.contactName);
+        setHeaderCapitalizeLabel(grid.addColumn(GenericAdvertisement::getContactPhoneNumber),Constants.contactPhoneNumber);
         return grid;
+    }
+
+    /**
+     * Method for formatting the first letter of a string as capital letter ( for table headers etc )
+     * @param str -
+     * @return
+     */
+    public static String capitalize(String str){
+        return StringUtils.capitalize(str);
+    }
+
+    private static Grid.Column resizeIdCol(Grid.Column col){
+        col.setFlexGrow(1).setWidth("30%");
+        return col;
+    }
+
+    private static Grid.Column setHeaderCapitalizeLabel(Grid.Column col,String headerLbl){
+        col.setHeader(capitalize(headerLbl));
+        return col;
     }
 
     /**
@@ -63,17 +82,17 @@ public class ViewsUtils {
      * @return H2
      */
     public static H2 addTopLabel(String lblText) {
-        return new H2(lblText);
+        return new H2(capitalize(lblText));
     }
 
     public static Grid buildAssetGrid(List<GenericAdvertisement> allAds) {
         List<GenericAdvertisement> assetAds = AdvertisementUtils.filterByCategory(Constants.assetCategory, allAds);
         Grid<AssetAdvertisement> grid = new Grid<>();
         grid.setItems(AdvertisementUtils.convertToAssetAds(assetAds));
-        grid.addColumn(AssetAdvertisement::getId).setHeader("ID").setFlexGrow(1).setWidth("30%");
-        grid.addColumn(AssetAdvertisement::getAssetAdType).setHeader("Type");
-        grid.addColumn(AssetAdvertisement::getAssetSize).setHeader("Size");
-        grid.addColumn(AssetAdvertisement::getNumberOfRooms).setHeader(Constants.numberOfRooms);
+        setHeaderCapitalizeLabel(resizeIdCol(grid.addColumn(AssetAdvertisement::getId)),Constants.id);
+        setHeaderCapitalizeLabel(grid.addColumn(AssetAdvertisement::getAssetAdType),Constants.assetAdType);
+        setHeaderCapitalizeLabel(grid.addColumn(AssetAdvertisement::getAssetSize),Constants.assetSize);
+        setHeaderCapitalizeLabel(grid.addColumn(AssetAdvertisement::getNumberOfRooms),Constants.numberOfRooms);
         return grid;
     }
 
@@ -81,14 +100,14 @@ public class ViewsUtils {
         List<GenericAdvertisement> carAds = AdvertisementUtils.filterByCategory(Constants.carCategory, allAds);
         Grid<CarAdvertisement> grid = new Grid<>();
         grid.setItems(AdvertisementUtils.convertToCarAds(carAds));
-        grid.addColumn(CarAdvertisement::getId).setHeader("ID").setFlexGrow(1).setWidth("30%");
-        grid.addColumn(CarAdvertisement::getManufacturer).setHeader("Manufecturer");
-        grid.addColumn(CarAdvertisement::getPrice).setHeader("Price");
-        grid.addColumn(CarAdvertisement::getModel).setHeader("Model");
-        grid.addColumn(CarAdvertisement::getYear).setHeader("Year");
-        grid.addColumn(CarAdvertisement::getColor).setHeader("Color");
-        grid.addColumn(CarAdvertisement::getContactName).setHeader("ContactName");
-        grid.addColumn(CarAdvertisement::getContactPhoneNumber).setHeader("ContactPhone");
+        setHeaderCapitalizeLabel(resizeIdCol(grid.addColumn(CarAdvertisement::getId)),Constants.id);
+        setHeaderCapitalizeLabel(grid.addColumn(CarAdvertisement::getManufacturer),Constants.manufacturer);
+        setHeaderCapitalizeLabel(grid.addColumn(CarAdvertisement::getPrice),Constants.price);
+        setHeaderCapitalizeLabel(grid.addColumn(CarAdvertisement::getModel),Constants.model);
+        setHeaderCapitalizeLabel(grid.addColumn(CarAdvertisement::getYear),Constants.year);
+        setHeaderCapitalizeLabel(grid.addColumn(CarAdvertisement::getColor),Constants.color);
+        setHeaderCapitalizeLabel(grid.addColumn(CarAdvertisement::getContactName),Constants.contactName);
+        setHeaderCapitalizeLabel(grid.addColumn(CarAdvertisement::getContactPhoneNumber),Constants.contactPhoneNumber);
         return grid;
     }
 
@@ -96,20 +115,19 @@ public class ViewsUtils {
         List<GenericAdvertisement> electricityAdvertisements = AdvertisementUtils.filterByCategory(Constants.electricityCategory, allAds);
         Grid<ElectricityAdvertisement> grid = new Grid<>();
         grid.setItems(AdvertisementUtils.convertToElectronicAds(electricityAdvertisements));
-        grid.addColumn(ElectricityAdvertisement::getId).setHeader("ID").setFlexGrow(1).setWidth("30%");
-        grid.addColumn(ElectricityAdvertisement::getElectricityType).setHeader("Type");
-        grid.addColumn(ElectricityAdvertisement::getPrice).setHeader("Price");
-        grid.addColumn(ElectricityAdvertisement::getCondition).setHeader("Condition");
-        grid.addColumn(ElectricityAdvertisement::getContactName).setHeader("ContactName");
-        grid.addColumn(ElectricityAdvertisement::getContactPhoneNumber).setHeader("ContactPhone");
+        setHeaderCapitalizeLabel(resizeIdCol(grid.addColumn(ElectricityAdvertisement::getId)),Constants.id);
+        setHeaderCapitalizeLabel(grid.addColumn(ElectricityAdvertisement::getElectricityType),Constants.electricityType);
+        setHeaderCapitalizeLabel(grid.addColumn(ElectricityAdvertisement::getPrice),Constants.price);
+        setHeaderCapitalizeLabel(grid.addColumn(ElectricityAdvertisement::getCondition),Constants.condition);
+        setHeaderCapitalizeLabel(grid.addColumn(ElectricityAdvertisement::getContactName),Constants.contactName);
+        setHeaderCapitalizeLabel(grid.addColumn(ElectricityAdvertisement::getContactPhoneNumber),Constants.contactPhoneNumber);
         return grid;
     }
 
-    public static HorizontalLayout createFilterByComponent(String currentPageLbl,
-                                                           Button filterButton,
+    public static HorizontalLayout createFilterByComponent(Button filterButton,
                                                            Component criteriaField) {
 
-        VerticalLayout filterWrapper = new VerticalLayout(filterButton);
+        VerticalLayout filterWrapper = new VerticalLayout(new Label(Constants.emptyString),filterButton);
         HorizontalLayout layout = new HorizontalLayout(criteriaField, filterWrapper);
         return layout;
     }
@@ -119,13 +137,10 @@ public class ViewsUtils {
 
         ComboBox<String> categoryDropdown;
         // Initialize dropdown list and filter button
-        categoryDropdown = new ComboBox<>("Category", categoryOptions);
+        categoryDropdown = new ComboBox<>(Constants.category, categoryOptions);
         categoryDropdown.setValue(Constants.genericCategory);
 
         return categoryDropdown;
     }
 
-    public static void setBorder(Component component) {
-        component.getStyle().set("border", "5 px solid black");
-    }
 }

@@ -54,8 +54,7 @@ public class FilterByCategoryView extends VerticalLayout {
 
         add(ViewsUtils.addTopLabel(pageLabelText));
         add(ViewsUtils.buildTopMenu());
-        add(ViewsUtils.createFilterByComponent(pageLabelText,
-                filterButton, categoryDropdown), grid);
+        add(ViewsUtils.createFilterByComponent(filterButton, categoryDropdown), grid);
     }
 }
 
