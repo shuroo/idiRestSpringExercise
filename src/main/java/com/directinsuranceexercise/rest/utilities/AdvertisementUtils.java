@@ -11,15 +11,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
 
+
 /**
-
- This is a utility class for various operations related to advertisements.
- It provides methods for generating a new unique ID, filtering advertisements by category and maximum price,
- converting advertisements to specific types, updating existing advertisements with input fields,
- and performing 'jump' by ID to bring an advertisement to the top of the list.
-
- @author shirirave
- @since 18/04/2023
+ *  AdvertisementUtils is a utility class for various operations related to advertisements.
+ *  It provides methods for generating a new unique ID, filtering advertisements by category and maximum price,
+ *  converting advertisements to specific types, updating existing advertisements with input fields,
+ *  and performing 'jump' by ID to bring an advertisement to the top of the list.
+ *
+ *  @author shirirave
+ *  @since 18/04/2023
  */
 public class AdvertisementUtils {
 
@@ -27,15 +27,8 @@ public class AdvertisementUtils {
 
 
     /**
-     * Method to perform 'jump' by id - to the top of the list
-     *
-     * @param id
-     * @param allAdvertisements
-     */
-
-
-    /**
-     * Brings an advertisement with the given ID to the top of the list.
+     * Brings an advertisement with the given ID to the top of the list
+     * AKA, Method to perform 'jump' by id operation.
      *
      * @param id - the ID of the advertisement to bring to the top
      * @param allAdvertisements - the list of all advertisements
@@ -52,9 +45,9 @@ public class AdvertisementUtils {
     }
 
     /**
-     * Filters a list of advertisements by category.
+     * Filters a list of advertisements by the advertisement category.
      *
-     * @param category - the category to filter by
+     * @param category - The category to filter by ( selected by the user )
      * @param allAdvertisements - the list of all advertisements
      * @return a new list containing only advertisements that match the given category
      */
@@ -64,7 +57,7 @@ public class AdvertisementUtils {
     }
 
     /**
-     * Filters a list of advertisements by maximum price.
+     * Filters a list of advertisements by the maximum price provided by the user input.
      *
      * @param maxPrice - the maximum price to filter by
      * @param allAdvertisements - the list of all advertisements

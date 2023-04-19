@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * REST controller for managing electricity advertisements.
  * @author shirirave
- * @since 04-18-2023
+ * @since 18/04/2023
  */
 @RestController
 @RequestMapping(value = "/electricityAdvertisements", produces = "application/json")

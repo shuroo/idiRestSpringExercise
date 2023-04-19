@@ -6,8 +6,10 @@ import com.directinsuranceexercise.rest.utilities.Constants;
 import java.util.logging.Logger;
 
 /**
- * The GenericAdvertisement class represents a generic advertisement with basic properties such as ID, category,
- * contact name, contact phone number and price.
+ * The GenericAdvertisement class is a prototype for generating general advertisement with basic properties
+ * such as ID, category,contact name, contact phone number and price.
+ *
+ * Mainly used for inheritance by specific ad categories ( car, asset etc ).
  *
  * @author shirirave
  * @since 18/04/2023

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * It cannot be accessed directly but should be inherited by a concrete controller class.
  *
  * @author shirirave
- * @since 04-18-2023
+ * @since 18/04/2023
  */
 @Component
 @RestController
@@ -34,6 +34,8 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
 
     /**
      * This method brings the advertisement with the given id to the top of the list.
+     * Aka, this is a method for implementing the 'jump' operation.
+     *
      * @param id the id of the advertisement to bring to the top
      * @return true if the operation was successful, false otherwise
      */
@@ -49,17 +51,6 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
         // for success -
         return true;
     }
-
-
-    /**
-     * Method for before creation of a new Advertisement: make sure the id does not already exists in the system,
-     * generate a new id
-     *
-     * @param advertisement
-     * @param category
-     * @return
-     */
-
 
     /**
      * This method creates a new advertisement with a generated id and adds it to the list of all advertisements.
@@ -81,18 +72,11 @@ abstract class AdvertisementController implements CRUDAdvertisementInterface {
 
     }
 
-    /**
-     * Generic method for ad update - cannot be accessed directly (-only by inheritance)
-     *
-     * @param id
-     * @param assetAdvertisement
-     * @return
-     * @throws Exception
-     */
-
 
     /**
-     * This is a generic method for updating an advertisement, and cannot be accessed directly but only by inheritance.
+     * This is a generic method for pre-updating an advertisement.
+     * Updated the new advertisement fields, removes the old data from the list to be later added
+     * with an updated advertisement by the 'update' method of the sub-classes.
      * @param id the id of the advertisement to be updated
      * @param assetAdvertisement the updated advertisement object
      * @return ResponseEntity representing the updated advertisement

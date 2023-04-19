@@ -1,7 +1,7 @@
 package com.directinsuranceexercise.rest.utilities;
 
 /**
- * This class holds constant values used throughout the project.
+ * Class for holding constant values used throughout the project.
  *
  * @author shirirave
  * @since 18/04/2023

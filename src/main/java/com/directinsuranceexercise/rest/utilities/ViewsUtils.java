@@ -19,17 +19,28 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
+/**
+ *  Utility class for views. provides general methods to be used by the various views of the application.
+ *
+ *  @author shirirave
+ *  @since 18/04/2023
+ */
 
 public class ViewsUtils {
 
+    /**
+     * Navigates to the specified view by providing its class reference. The navigation is handled by the Vaadin UI.getCurrent() method.
+     *
+     * @param someClass a reference to the class of the view to navigate to.
+     * @throws IllegalArgumentException if the provided class reference is null or the view cannot be found.
+     */
     private static void navigateTo(Class someClass) {
         UI.getCurrent().navigate(someClass);
     }
 
     /**
-     * Method to add a generic top menu bar to a layout
-     *
-     * @return MenuBar
+     * Method for building a general top menu bar for each given page
+     * @return MenuBar - The top menu bar constructed.
      */
 
     public static MenuBar buildTopMenu() {
@@ -45,6 +56,11 @@ public class ViewsUtils {
         return menuBar;
     }
 
+    /**
+     * Method for constructing a generic grid to be displayed by the different views.
+     * @param allAds - The ads data list
+     * @return Grid<GenericAdvertisement> - The data in the system displayed in a general-ads grid
+     */
     public static Grid<GenericAdvertisement> buildGenericGrid(List<GenericAdvertisement> allAds) {
         Grid<GenericAdvertisement> grid = new Grid<>();
         grid.setItems(allAds);
@@ -58,17 +74,29 @@ public class ViewsUtils {
 
     /**
      * Method for formatting the first letter of a string as capital letter ( for table headers etc )
-     * @param str -
-     * @return
+     * @param str - the string to capitalize
+     * @return String
      */
     public static String capitalize(String str){
         return StringUtils.capitalize(str);
     }
 
+    /**
+     * Method for increasing a specific column width in a grid.
+     * @param col - the column to operate on
+     * @return Grid.Column
+     */
     private static Grid.Column resizeIdCol(Grid.Column col){
         col.setFlexGrow(1).setWidth("30%");
         return col;
     }
+
+    /**
+     * Method for setting header with capitalize label
+     * @param col - The given column
+     * @param headerLbl - The label for the given column to set
+     * @return Grid.Column
+     */
 
     private static Grid.Column setHeaderCapitalizeLabel(Grid.Column col,String headerLbl){
         col.setHeader(capitalize(headerLbl));
@@ -85,6 +113,13 @@ public class ViewsUtils {
         return new H2(capitalize(lblText));
     }
 
+    /**
+     * Method for construction asset grid for asset ads only, filtered by this category.
+     * Note that the data displayed in this specific method is basic (from GenericAdvertisement parent class),
+     * and does not include specific asset-ad fields
+     * @param allAds - The list of ads , a singleton
+     * @return Grid<GenericAdvertisement>
+     */
     public static Grid buildAssetGrid(List<GenericAdvertisement> allAds) {
         List<GenericAdvertisement> assetAds = AdvertisementUtils.filterByCategory(Constants.assetCategory, allAds);
         Grid<AssetAdvertisement> grid = new Grid<>();
@@ -96,6 +131,13 @@ public class ViewsUtils {
         return grid;
     }
 
+    /**
+     * Method for construction car grid for asset ads only, filtered by this category.
+     * Note that the data displayed in this specific method is basic (from GenericAdvertisement parent class),
+     * and does not include specific car-ad fields
+     * @param allAds - The list of ads , a singleton
+     * @return Grid<GenericAdvertisement>
+     */
     public static Grid buildCarGrid(List<GenericAdvertisement> allAds) {
         List<GenericAdvertisement> carAds = AdvertisementUtils.filterByCategory(Constants.carCategory, allAds);
         Grid<CarAdvertisement> grid = new Grid<>();
@@ -111,6 +153,13 @@ public class ViewsUtils {
         return grid;
     }
 
+    /**
+     * Method for construction electronics grid for electronics ads only, filtered by this category.
+     * Note that the data displayed in this specific method is basic (from GenericAdvertisement parent class),
+     * and does not include specific electronic-ad fields
+     * @param allAds - The list of ads , a singleton
+     * @return Grid<GenericAdvertisement>
+     */
     public static Grid buildElectronicsGrid(List<GenericAdvertisement> allAds) {
         List<GenericAdvertisement> electricityAdvertisements = AdvertisementUtils.filterByCategory(Constants.electricityCategory, allAds);
         Grid<ElectricityAdvertisement> grid = new Grid<>();
@@ -124,6 +173,13 @@ public class ViewsUtils {
         return grid;
     }
 
+    /**
+     * Method for constructing a filter by component
+     * to be used , for example, in the 'filter by category' and 'filter by max price' views.
+     * @param filterButton - The filter button
+     * @param criteriaField - The criteria field ( category combo box, text field for the max price provided, etc )
+     * @return HorizontalLayout - The component constructed
+     */
     public static HorizontalLayout createFilterByComponent(Button filterButton,
                                                            Component criteriaField) {
 
@@ -132,6 +188,10 @@ public class ViewsUtils {
         return layout;
     }
 
+    /**
+     * Method to get the category options in a combo box.
+     * @return ComboBox<String>
+     */
     public static ComboBox<String> getCategoryOptions() {
         String[] categoryOptions = {Constants.genericCategory, Constants.assetCategory, Constants.carCategory, Constants.electricityCategory};
 
