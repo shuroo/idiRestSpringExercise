@@ -81,7 +81,7 @@ public class ViewsUtils {
      * @param lblText
      * @return H2
      */
-    public static H2 addTopLabel(String lblText) {
+    public static H2 constructTopLabel(String lblText) {
         return new H2(capitalize(lblText));
     }
 

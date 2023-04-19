@@ -15,20 +15,50 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 
+/**
+ * The FilterByCategoryView class represents the view for filtering advertisements by category.
+ * It extends the VerticalLayout class and implements the route "/filterByCategory".
+ * @author shirirave
+ * @since 18/04/2023
+ *
+ */
+
+
 @Route(value = "/filterByCategory")
 public class FilterByCategoryView extends VerticalLayout {
+    /**
+     * The RestTemplate object used to communicate with the API.
+     */
     private final RestTemplate restTemplate;
+
+    /**
+     * The ComboBox object representing the category dropdown.
+     */
     private ComboBox<String> categoryDropdown;
+
+    /**
+     * The Button object representing the filter button.
+     */
     private Button filterButton;
 
+    /**
+     * A list of all GenericAdvertisement objects.
+     */
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
 
+    /**
+     * The label text for the top of the page.
+     */
     private final String pageLabelText = "Filter by Category";
 
-    private final String filterTitle = "Filter!";
-
+    /**
+     * The Grid object used to display advertisements.
+     */
     private Grid<GenericAdvertisement> grid;
 
+    /**
+     * Filters the advertisements by category and sets the items in the grid.
+     */
     private void filterByCategory() {
         String category = categoryDropdown.getValue();
         if (category.equals(Constants.genericCategory)) {
@@ -39,20 +69,22 @@ public class FilterByCategoryView extends VerticalLayout {
         }
     }
 
-
+    /**
+     * Constructs a FilterByCategoryView object.
+     *
+     * @param restTemplate The RestTemplate object used to communicate with the API.
+     */
     public FilterByCategoryView(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
 
-
         // Initialize dropdown list and filter button
         categoryDropdown = ViewsUtils.getCategoryOptions();
-        filterButton = new Button(filterTitle, e -> filterByCategory());
+        filterButton = new Button(Constants.filterBtnTitle, e -> filterByCategory());
 
         // Create the grid and add to the view
-
         grid = ViewsUtils.buildGenericGrid(allAds);
 
-        add(ViewsUtils.addTopLabel(pageLabelText));
+        add(ViewsUtils.constructTopLabel(pageLabelText));
         add(ViewsUtils.buildTopMenu());
         add(ViewsUtils.createFilterByComponent(filterButton, categoryDropdown), grid);
     }

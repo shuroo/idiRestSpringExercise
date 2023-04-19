@@ -10,7 +10,7 @@ import com.vaadin.flow.router.Route;
 import java.util.List;
 
 /**
- * ShowElectronicsView is a Vaadin view that displays a grid of advertisements
+ * ShowElectronicsView is a Vaadin view to display a grid of electronic-advertisements
  * retrieved from a singleton AdManager object, along with a top menu.
  * The view is accessed through the "/showElectronics" route.
  *
@@ -24,8 +24,14 @@ public class ShowElectronicsView extends VerticalLayout {
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
     private final String titleLabel = "Electronic Advertisements";
 
+    /**
+     * Simple constructor to build the electronics grid View as mentioned above:
+     *  - Displays a title
+     *  - A top menu
+     *  - And the electronics advertisements grid.
+     */
     public ShowElectronicsView() {
-        add(ViewsUtils.addTopLabel(titleLabel));
+        add(ViewsUtils.constructTopLabel(titleLabel));
         add(ViewsUtils.buildTopMenu());
         add(ViewsUtils.buildElectronicsGrid(allAds));
     }

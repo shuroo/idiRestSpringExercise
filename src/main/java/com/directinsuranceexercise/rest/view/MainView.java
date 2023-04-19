@@ -1,3 +1,12 @@
+/**
+ * This class represents the main view of the application, which displays and allows CRUD operations on advertisements.
+ * The view contains a grid that shows all advertisements, a form with a text area that allows the user to input a JSON object
+ * representing an advertisement, and buttons for creating, updating, and deleting advertisements.
+ *
+ * @author shirirave
+ * @since 18/04/2023
+ */
+
 package com.directinsuranceexercise.rest.view;
 
 import com.directinsuranceexercise.rest.model.*;
@@ -8,7 +17,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -55,6 +64,16 @@ public class MainView extends VerticalLayout {
     private final Binder<JsonBean> binder = new Binder<>(JsonBean.class);
     private final JsonBean bean = new JsonBean();
 
+
+    /**
+     * Convert an AssetAdvertisement to a JSONObject, and add its fields to the existing JSONObject.
+     *
+     * @param jsonAd - The JSONObject to update with the advertisement fields.
+     * @param ad - The AssetAdvertisement to convert to a JSONObject.
+     * @throws JSONException if any errors occur while converting
+     *
+     * */
+
     private void genericAdvertisementAsJson(JSONObject jsonAd, GenericAdvertisement ad) throws JSONException {
         jsonAd.put(Constants.id, ad.getId());
         jsonAd.put(Constants.price, ad.getPrice());
@@ -62,12 +81,26 @@ public class MainView extends VerticalLayout {
         jsonAd.put(Constants.contactPhoneNumber, ad.getContactPhoneNumber());
     }
 
+    /**
+     * Converts an AssetAdvertisement object to JSON format and adds its fields to the given JSONObject.
+     *
+     * @param jsonAd - the JSONObject to which the advertisement fields will be added
+     * @param ad - the AssetAdvertisement object to convert to JSON format
+     * @throws JSONException if there is an error in the JSON object
+     */
     private void assetAdvertisementAsJson(JSONObject jsonAd, AssetAdvertisement ad) throws JSONException {
         jsonAd.put(Constants.numberOfRooms, ad.getNumberOfRooms());
         jsonAd.put(Constants.assetAdType, ad.getAssetAdType());
         jsonAd.put(Constants.assetSize, ad.getAssetSize());
     }
 
+    /**
+     * Converts a CarAdvertisement object to JSON format and adds its fields to the given JSONObject.
+     *
+     * @param jsonAd - the JSONObject to which the advertisement fields will be added
+     * @param ad - the CarAdvertisement object to convert to JSON format
+     * @throws JSONException if there is an error in the JSON object
+     */
     private void carAdvertisementAsJson(JSONObject jsonAd, CarAdvertisement ad) throws JSONException {
         jsonAd.put(Constants.color, ad.getColor());
         jsonAd.put(Constants.model, ad.getPrice());
@@ -76,13 +109,27 @@ public class MainView extends VerticalLayout {
         jsonAd.put(Constants.km, ad.getKm());
     }
 
+    /**
+     * Converts an ElectricityAdvertisement object to JSON format and adds its fields to the given JSONObject.
+     *
+     * @param jsonAd - the JSONObject to which the advertisement fields will be added
+     * @param ad - the ElectricityAdvertisement object to convert to JSON format
+     * @throws JSONException if there is an error in the JSON object
+     */
     private void electronicsAdvertisementAsJson(JSONObject jsonAd, ElectricityAdvertisement ad) throws JSONException {
-
         jsonAd.put(Constants.condition, ad.getCondition());
         jsonAd.put(Constants.electricityType, ad.getElectricityType());
     }
 
-    private JSONObject buildAdvertisementAsJson(GenericAdvertisement ad, GenericAdvertisement extendedAd) {
+    /**
+     * Converts a GenericAdvertisement object to JSON format by calling the appropriate private method
+     * based on the advertisement's category and returns the resulting JSONObject.
+     *
+     * @param ad - the GenericAdvertisement object to convert to JSON format
+     * @param extendedAd - the extended advertisement object to convert to JSON format
+     * @return a JSONObject containing the advertisement's fields in JSON format
+     */
+    public JSONObject buildAdvertisementAsJson(GenericAdvertisement ad, GenericAdvertisement extendedAd) {
         JSONObject jsonAd = new JSONObject();
         String adCategory = ad.getCategory();
         try {
@@ -97,7 +144,6 @@ public class MainView extends VerticalLayout {
                 electronicsAdvertisementAsJson(jsonAd, (ElectricityAdvertisement) extendedAd);
 
             }
-
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -151,7 +197,7 @@ public class MainView extends VerticalLayout {
         String category = categories.getValue();
         switch (category) {
             case Constants.genericCategory:
-                throw new JSONException("Invalid category, please select one and try again");
+                throw new JSONException(invalidCategoryMsg);
             case Constants.assetCategory:
                 urlPrefix = "assetAdvertisements";
                 return urlPrefix;
@@ -169,12 +215,14 @@ public class MainView extends VerticalLayout {
     }
 
     /**
-     * The follwoing method is aimed to validate the full json structure by its category.
+     * The following method is aimed to validate the full json structure by its category.
+     * Will be used when the full json is required as an input, AKA, for create and update operations.
      * Throws a json exception in case a required field does not exist.
+     * ( When additional categories are added, should be updated ).
      *
-     * @param requestBody
-     * @return
-     * @throws JSONException
+     * @param requestBody - The request body in a json format
+     * @return Boolean - True if valid, False otherwise
+     * @throws JSONException - When a required field is missing etc.
      */
     private boolean validateFullJsonStructure(JSONObject requestBody) throws JSONException {
         requestBody.getDouble(Constants.price);
@@ -206,20 +254,20 @@ public class MainView extends VerticalLayout {
     }
 
     /**
-     * Make sure the request has all the needed fields
+     * Validates a request based on the HTTP method and the JSON request body,
+     * Make sure the request has all the needed fields.
      *
-     * @param requestBody
-     * @param httpMethod
-     * @return
-     * @throws JSONException
+     * @param requestBody the JSON request body
+     * @param httpMethod the HTTP method of the request
+     * @return true if the request is valid, false otherwise
+     * @throws JSONException if there is an error parsing the JSON
      */
-
     private boolean validateRequest(JSONObject requestBody, String httpMethod) throws JSONException {
-        // for any request except creation, we should verify the id field exists.
+        // For any request except creation, we should verify the id field exists.
         if (!httpMethod.equals(createOperation)) {
             requestBody.getString(Constants.id);
         }
-        // For 'Create' or 'Edit', verify that we have a full json structure with all the Ad required fields
+        // For 'Create' or 'Edit', verify that we have a full JSON structure with all the Ad required fields.
         if (httpMethod.equals(createOperation) || httpMethod.equals(updateOperation)) {
             return validateFullJsonStructure(requestBody);
         }
@@ -227,13 +275,19 @@ public class MainView extends VerticalLayout {
         return true;
     }
 
-    private String buildUrl(String urlPrefix,String urlSuffix){
+    /**
+     * Builds a URL from the given URL prefix and suffix.
+     * @param urlPrefix the URL prefix
+     * @param urlSuffix the URL suffix
+     * @return the built URL
+     */
+    private String buildUrl(String urlPrefix, String urlSuffix){
         return Constants.baseUrl + urlPrefix + "/" + urlSuffix;
     }
 
-
     /**
-     * Perform CRUD operations as needed
+     * Perform CRUD (+ jumpTo The top of the list ) operations based on the selected operation, if the input is valid.
+     * @param operationBtn - The Operation button clicked ( Create \ Update \ Delete \ JumpToTop )
      */
     private void performCRUD(Button operationBtn) {
 
@@ -294,10 +348,25 @@ public class MainView extends VerticalLayout {
 
     }
 
+
+    /**
+     * Sets width and height of the text area used to display and input JSON data.
+     * The width is set to 80% of the available horizontal space,
+     * The height is set to 70% of the available vertical space.
+     */
+
     private void setTextAreaSize() {
         jsonTextArea.setWidth("80%");
         jsonTextArea.setHeight("70%");
     }
+
+    /**
+     * The constructor for the MainView class.
+     * Constructs the Main View Page:
+     *  - Initializes the UI components of the view, including a text area for inputting and displaying JSON data,
+     *    buttons for performing CRUD operations, and a grid for displaying existing advertisements.
+     *  - sets up event listeners for the buttons and grid.
+     */
 
     public MainView() {
         jsonTextArea = new TextArea();
@@ -322,7 +391,7 @@ public class MainView extends VerticalLayout {
 
         formLayout.add(jsonTextArea, categories, createButton, updateButton, deleteButton, jumpToTop);
 
-        H1 titleLabel = new H1(pageLabelText);
+        H2 titleLabel = ViewsUtils.constructTopLabel(pageLabelText);
         grid = ViewsUtils.buildGenericGrid(allAds.stream().toList());
         setOnClickHandler(grid);
 
@@ -332,7 +401,12 @@ public class MainView extends VerticalLayout {
         add(grid);
     }
 
-    private void validateJson() {
+    /**
+     * Method to validate the input as a json. Makes sure that the input has a valid json structure.
+     * Raising ErrorMessage for the text field when a jsonException occurs ( if the input is not in a proper json format )
+     * @return boolean - True if the json input is valid, false otherwise.
+     */
+    private boolean validateJson() {
         try {
             // Parse the JSON entered by the user
             String jsonString = jsonTextArea.getValue();
@@ -341,15 +415,18 @@ public class MainView extends VerticalLayout {
 
             // Write the JSON to the bean object
             binder.writeBean(bean);
+            return true;
 
         } catch (JSONException e) {
             // Invalid JSON format
             jsonTextArea.setErrorMessage("Invalid JSON format: " + e.getMessage());
             jsonTextArea.setInvalid(true);
+            return false;
         } catch (ValidationException e) {
             // Validation failed, show error message...
             jsonTextArea.setErrorMessage(e.getMessage());
             jsonTextArea.setInvalid(true);
+            return false;
         }
     }
 

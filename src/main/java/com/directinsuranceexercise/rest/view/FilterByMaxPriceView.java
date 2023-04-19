@@ -18,6 +18,13 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * This class represents a view that allows the user to filter the ads by a maximum price.
+ * It is also using Vaadin Grid to display the ads.
+ *
+ * @author shirirave
+ * @since 18/04/2023
+ */
 @Route(value = "/filterByMaxPrice")
 public class FilterByMaxPriceView extends VerticalLayout {
     private final RestTemplate restTemplate;
@@ -28,16 +35,29 @@ public class FilterByMaxPriceView extends VerticalLayout {
     private TextField maxPriceField;
     private Button filterButton;
 
+    private final String maxPriceTextFieldLbl = "Max Price";
+
+    private final double minValidatorRange = 0.0;
+
+    private final double maxValidatorRange = 1000000.0;
+
     private final static String numberWasInvalidMsg = "Please enter a valid number";
 
     private final static String outOfRangeMsg = "Price must be between 0 and 1,000,000";
 
     private final String titleLabel = "Filter By Max Price";
 
+    /**
+     * This is an instanse of the singletop data structure of the adds list
+     * ( -implemented by a concurrentListQueue for ad syncronization reasons )
+     */
     private List<GenericAdvertisement> allAds = AdManager.getInstance().getAdvertisements().stream().toList();
-
     private Grid<GenericAdvertisement> grid;
 
+    /**
+     * This method filters the ads by the maximum price entered by the user.
+     * If the input value is invalid, a warning is logged and nothing happens.
+     */
     private void filterByMaxPrice() {
         if (maxPriceField.getValue() == null) {
             logger.warning("Bad initial value for max number, failed to filter");
@@ -55,10 +75,16 @@ public class FilterByMaxPriceView extends VerticalLayout {
         grid.setItems(filteredAds);
     }
 
+    /**
+     * This is the constructor for the FilterByMaxPriceView class.
+     * It initializes the text field, button, and grid.
+     *
+     * @param restTemplate The RestTemplate used for HTTP requests.
+     */
     public FilterByMaxPriceView(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
 
-        // Initialize dropdown list, max price field, and filter button
+        // Initialize text field, binder, and button
         maxPriceField = new TextField("Max Price");
         Binder<Double> maxPriceBinder = new Binder<>();
         maxPriceBinder.forField(maxPriceField)
@@ -69,13 +95,14 @@ public class FilterByMaxPriceView extends VerticalLayout {
                     // Do nothing here, just need a write-only binding
                 });
 
-        filterButton = new Button("Filter!", e -> filterByMaxPrice());
+        filterButton = new Button(Constants.filterBtnTitle, e -> filterByMaxPrice());
 
         // Create the grid and add to the view
         grid = ViewsUtils.buildGenericGrid(allAds);
-        add(ViewsUtils.addTopLabel(titleLabel));
+        add(ViewsUtils.constructTopLabel(titleLabel));
         add(ViewsUtils.buildTopMenu());
         add(ViewsUtils.createFilterByComponent(filterButton, maxPriceField), grid);
     }
+
 }
 
