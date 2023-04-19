@@ -99,21 +99,16 @@ public class CarAdvertisementController extends AdvertisementController implemen
         return super.bringAdvertisementToTop(id);
     }
 
+
     /**
-     * Delete Ad -
-     * This method was implemented just for the routes,
-     * This method was implemented just for the routes consistency,
+     *      Method for Deleting an Advertisement -
+     *      Deletes the CarAdvertisement with the given ID from the system.
+     *      This method was implemented just for the sake of route consistency,
+     *      as its implementation already exists in its parent - it is the same as in the parent class.
      *
-     * @param id - the Ad Id
-     * @return boolean
-     */
-
-    /**
-
-     Delete Advertisement -
-     Deletes the CarAdvertisement with the given ID from the system.
-     @param id - the ID of the CarAdvertisement to delete
-     @return boolean - true if the CarAdvertisement was successfully deleted, false otherwise
+     *      @param id - the ID of the CarAdvertisement to delete
+     *      @return boolean - true if the CarAdvertisement was successfully deleted, false otherwise
+     *
      */
     @DeleteMapping("/{id}")
     @Override

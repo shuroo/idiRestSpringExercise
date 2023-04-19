@@ -60,17 +60,9 @@ public class ElectricityAdvertisementController extends AdvertisementController 
     }
 
     /**
-     * Jump Ad to top -
-     * This method was implemented just for the routes consistency,
-     * The implementation is exactly the same as in the parent.
-     *
-     * @param id - the Ad Id
-     * @return boolean
-     */
-
-    /**
      * HTTP endpoint for bringing an advertisement to the top of the list.
-     * This method was implemented just for the sake of route consistency, and its implementation is the same as in the parent class.
+     * This method was implemented just for the sake of route consistency,
+     * as its implementation already exists in its parent - it is the same as in the parent class.
      * @param id The ID of the advertisement to be moved to the top.
      * @return true if the advertisement was moved to the top successfully, false otherwise.
      */

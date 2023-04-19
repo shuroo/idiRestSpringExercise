@@ -8,13 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
 
- This class handles HTTP requests related to asset advertisements. It inherits from the abstract AdvertisementController
- and implements the CRUDAdvertisementInterface to perform basic CRUD operations on asset advertisements. It defines methods
- to create, update, retrieve and delete asset advertisements.
- @author shirirave
- @since 18/04/2023
+/**
+ *  This class handles HTTP requests related to asset advertisements. It inherits from the abstract AdvertisementController
+ *  and implements the CRUDAdvertisementInterface to perform basic CRUD operations on asset advertisements. It defines methods
+ *  to create, update, retrieve and delete asset advertisements.
+ *  @author shirirave
+ *  @since 18/04/2023
  */
 @RestController
 @RequestMapping(value = "/assetAdvertisements", produces = "application/json")
