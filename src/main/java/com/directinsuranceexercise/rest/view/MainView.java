@@ -103,7 +103,7 @@ public class MainView extends VerticalLayout {
      */
     private void carAdvertisementAsJson(JSONObject jsonAd, CarAdvertisement ad) throws JSONException {
         jsonAd.put(Constants.color, ad.getColor());
-        jsonAd.put(Constants.model, ad.getPrice());
+        jsonAd.put(Constants.model, ad.getModel());
         jsonAd.put(Constants.manufacturer, ad.getManufacturer());
         jsonAd.put(Constants.year, ad.getYear());
         jsonAd.put(Constants.km, ad.getKm());
